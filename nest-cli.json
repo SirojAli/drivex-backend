@@ -1,8 +1,32 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/drivex-api/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/drivex-api/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/drivex-api",
+  "projects": {
+    "drivex-api": {
+      "type": "application",
+      "root": "apps/drivex-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/drivex-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/drivex-api/tsconfig.app.json"
+      }
+    },
+    "drivex-batch": {
+      "type": "application",
+      "root": "apps/drivex-batch",
+      "entryFile": "main",
+      "sourceRoot": "apps/drivex-batch/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/drivex-batch/tsconfig.app.json"
+      }
+    }
   }
 }

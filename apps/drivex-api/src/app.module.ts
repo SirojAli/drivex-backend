@@ -29,8 +29,8 @@ import { AppResolver } from './app.resolver';
 			//   return graphQLFormattedError;
 			// }
 		}),
-		// ComponentsModule,
-		// DatabaseModule,
+		ComponentsModule,
+		DatabaseModule,
 		// SocketModule
 	],
 	controllers: [AppController],
@@ -41,6 +41,8 @@ export class AppModule {}
 // import { Module } from '@nestjs/common';
 // import { AppController } from './app.controller';
 // import { AppService } from './app.service';
+import { ComponentsModule } from './components/components.module';
+import { DatabaseModule } from './database/database.module';
 
 // @Module({
 //   imports: [],

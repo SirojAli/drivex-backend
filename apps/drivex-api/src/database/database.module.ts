@@ -19,7 +19,7 @@ export class DatabaseModule {
 				`MongoDB is connected into ${process.env.NODE_ENV === 'production' ? 'production' : 'development'} db`,
 			);
 		} else {
-			console.log('DB is not connected!');
+			console.log('Database is not connected!');
 		}
 	}
 }

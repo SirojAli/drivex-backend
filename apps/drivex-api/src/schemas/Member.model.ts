@@ -27,15 +27,15 @@ const MemberSchema = new Schema(
 			required: true,
 		},
 
-		memberNick: {
-			type: String,
-			index: { unique: true, sparse: true },
-			required: true,
-		},
-
 		memberPassword: {
 			type: String,
 			select: false,
+			required: true,
+		},
+
+		memberNick: {
+			type: String,
+			index: { unique: true, sparse: true },
 			required: true,
 		},
 
@@ -56,7 +56,7 @@ const MemberSchema = new Schema(
 			type: String,
 		},
 
-		memberProperties: {
+		memberCars: {
 			type: Number,
 			default: 0,
 		},

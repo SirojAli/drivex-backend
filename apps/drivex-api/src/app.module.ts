@@ -11,31 +11,31 @@ import { ConfigModule } from '@nestjs/config';
 // import { SocketModule } from './socket/socket.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    // GraphQLModule.forRoot({
-    //   driver: ApolloDriver,
-    //   playground: true,
-    //   uploads: false,
-    //   autoSchemaFile: true,
-    //   // formatError: (error: T) => {
-    //   //   // console.log('error:', error);
-    //   //   const graphQLFormattedError = {
-    //   //     code: error?.extensions.code,
-    //   //     message:
-    //   //       error?.extensions?.exception?.response?.message || error?.extensions?.response?.message || error?.message
-    //   //   };
-    //   //   console.log('GRAPHQL GLOBAL ERR:', graphQLFormattedError);
-    //   //   return graphQLFormattedError;
-    //   // }
-    // }),
-    // ComponentsModule,
-    // DatabaseModule,
-    // SocketModule
-  ],
-  controllers: [AppController],
-  // providers: [AppService, AppResolver],
-  providers: [AppService],
+	imports: [
+		ConfigModule.forRoot(),
+		// GraphQLModule.forRoot({
+		//   driver: ApolloDriver,
+		//   playground: true,
+		//   uploads: false,
+		//   autoSchemaFile: true,
+		//   // formatError: (error: T) => {
+		//   //   // console.log('error:', error);
+		//   //   const graphQLFormattedError = {
+		//   //     code: error?.extensions.code,
+		//   //     message:
+		//   //       error?.extensions?.exception?.response?.message || error?.extensions?.response?.message || error?.message
+		//   //   };
+		//   //   console.log('GRAPHQL GLOBAL ERR:', graphQLFormattedError);
+		//   //   return graphQLFormattedError;
+		//   // }
+		// }),
+		// ComponentsModule,
+		// DatabaseModule,
+		// SocketModule
+	],
+	controllers: [AppController],
+	// providers: [AppService, AppResolver],
+	providers: [AppService],
 })
 export class AppModule {}
 

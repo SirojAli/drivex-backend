@@ -3,10 +3,10 @@ import { DrivexBatchService } from './drivex-batch.service';
 
 @Controller()
 export class DrivexBatchController {
-  constructor(private readonly drivexBatchService: DrivexBatchService) {}
+	constructor(private readonly drivexBatchService: DrivexBatchService) {}
 
-  @Get()
-  getHello(): string {
-    return this.drivexBatchService.getHello();
-  }
+	@Get()
+	getHello(): string {
+		return this.drivexBatchService.getHello();
+	}
 }

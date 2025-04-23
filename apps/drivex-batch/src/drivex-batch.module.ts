@@ -4,8 +4,8 @@ import { DrivexBatchService } from './drivex-batch.service';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
-  controllers: [DrivexBatchController],
-  providers: [DrivexBatchService],
+	imports: [ConfigModule.forRoot()],
+	controllers: [DrivexBatchController],
+	providers: [DrivexBatchService],
 })
 export class DrivexBatchModule {}

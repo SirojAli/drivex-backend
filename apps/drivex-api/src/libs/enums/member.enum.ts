@@ -8,7 +8,7 @@ import { registerEnumType } from '@nestjs/graphql';
 export enum MemberType {
 	ADMIN = 'ADMIN',
 	USER = 'USER',
-	SELLER = 'SELLER', // AGENT emas, SELLER qildim => mashina oldi-sotdisi uchun
+	SELLER = 'SELLER', // Agent emas, SELLER qildim => mashina oldi-sotdisi uchun
 }
 registerEnumType(MemberType, { name: 'MemberType' });
 // 'registerEnumType' orqali, biz TS da hosil qilgan enumlarni

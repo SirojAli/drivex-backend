@@ -1,7 +1,13 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { CarService } from './car.service';
 import { Cars, Car } from '../../libs/dto/car/car';
-import { AgentCarsInquiry, AllCarsInquiry, OrdinaryInquiry, CarsInquiry, CarInput } from '../../libs/dto/car/car.input';
+import {
+	SellerCarsInquiry,
+	AllCarsInquiry,
+	OrdinaryInquiry,
+	CarsInquiry,
+	CarInput,
+} from '../../libs/dto/car/car.input';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UseGuards } from '@nestjs/common';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -77,12 +83,12 @@ export class CarResolver {
 	@Roles(MemberType.SELLER)
 	@UseGuards(RolesGuard)
 	@Query(() => Cars)
-	public async getAgentCars(
-		@Args('input') input: AgentCarsInquiry,
+	public async getSellerCars(
+		@Args('input') input: SellerCarsInquiry,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Cars> {
-		console.log('Query: getAgentCars');
-		return await this.carService.getAgentCars(memberId, input);
+		console.log('Query: getSellerCars');
+		return await this.carService.getSellerCars(memberId, input);
 	}
 
 	@UseGuards(AuthGuard)

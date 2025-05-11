@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { CarType, CarMake, CarStatus, CarFuelType, CarTransmission } from '../../enums/car.enum';
+import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarColor } from '../../enums/car.enum';
 import { Member, TotalCounter } from '../member/member';
 import { MeLiked } from '../like/like';
 
@@ -15,8 +15,11 @@ export class Car {
 	@Field(() => CarStatus)
 	carStatus: CarStatus;
 
-	// @Field(() => CarLocation)
-	// carLocation: CarLocation;
+	@Field(() => CarBrand)
+	carBrand: CarBrand;
+
+	@Field(() => String)
+	carModel: string;
 
 	@Field(() => String)
 	carAddress: string;
@@ -25,22 +28,28 @@ export class Car {
 	carTitle: string;
 
 	@Field(() => Number)
-	carPrice: number;
+	carYear: number;
 
 	@Field(() => Number)
-	carSquare: number;
+	carPrice: number;
 
-	@Field(() => Int)
-	carBeds: number;
+	// @Field(() => Number)
+	// carMileage: number;
 
-	@Field(() => Int)
-	carRooms: number;
+	@Field(() => CarFuelType)
+	carFuelType: CarFuelType;
 
-	@Field(() => Int)
-	carViews: number;
+	@Field(() => CarTransmission)
+	carTransmission: CarTransmission;
 
-	@Field(() => Int)
-	carLikes: number;
+	@Field(() => CarColor)
+	carColor: CarColor;
+
+	@Field(() => [String])
+	carImages: string[];
+
+	@Field(() => String, { nullable: true })
+	carDescription?: string;
 
 	@Field(() => Int)
 	carComments: number;
@@ -48,17 +57,11 @@ export class Car {
 	@Field(() => Int)
 	carRank: number;
 
-	@Field(() => [String])
-	carImages: string[];
+	@Field(() => Int)
+	carViews: number;
 
-	@Field(() => String, { nullable: true })
-	carDesc?: string;
-
-	@Field(() => Boolean)
-	carBarter: boolean;
-
-	@Field(() => Boolean)
-	carRent: boolean;
+	@Field(() => Int)
+	carLikes: number;
 
 	@Field(() => String)
 	memberId: ObjectId;
@@ -68,9 +71,6 @@ export class Car {
 
 	@Field(() => Date, { nullable: true })
 	deletedAt?: Date;
-
-	@Field(() => Date, { nullable: true })
-	constructedAt?: Date;
 
 	@Field(() => Date)
 	createdAt: Date;

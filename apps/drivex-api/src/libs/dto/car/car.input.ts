@@ -1,19 +1,25 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import { CarType, CarMake, CarStatus, CarFuelType, CarTransmission } from '../../enums/car.enum';
+import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarColor } from '../../enums/car.enum';
 import { ObjectId } from 'mongoose';
 import { availableCarSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
 
+// 1. CAR INPUT
 @InputType()
 export class CarInput {
 	@IsNotEmpty()
 	@Field(() => CarType)
 	carType: CarType;
 
-	// @IsNotEmpty()
-	// @Field(() => CarLocation)
-	// carLocation: CarLocation;
+	@IsNotEmpty()
+	@Field(() => CarBrand)
+	carBrand: CarBrand;
+
+	@IsNotEmpty()
+	@Length(1, 50)
+	@Field(() => String)
+	carModel: string;
 
 	@IsNotEmpty()
 	@Length(3, 100)
@@ -27,23 +33,27 @@ export class CarInput {
 
 	@IsNotEmpty()
 	@Field(() => Number)
-	carPrice: number;
+	carYear: number;
 
 	@IsNotEmpty()
 	@Field(() => Number)
-	carSquare: number;
+	carPrice: number;
+
+	// @IsNotEmpty()
+	// @Field(() => Number)
+	// carMileage: number;
 
 	@IsNotEmpty()
-	@IsInt()
-	@Min(1)
-	@Field(() => Int)
-	carBeds: number;
+	@Field(() => CarFuelType)
+	carFuelType: CarFuelType;
 
 	@IsNotEmpty()
-	@IsInt()
-	@Min(1)
-	@Field(() => Int)
-	carRooms: number;
+	@Field(() => CarTransmission)
+	carTransmission: CarTransmission;
+
+	@IsNotEmpty()
+	@Field(() => CarColor)
+	carColor: CarColor;
 
 	@IsNotEmpty()
 	@Field(() => [String])
@@ -52,21 +62,19 @@ export class CarInput {
 	@IsOptional()
 	@Length(5, 500)
 	@Field(() => String, { nullable: true })
-	carDesc?: string;
-
-	@IsOptional()
-	@Field(() => Boolean, { nullable: true })
-	carBarter?: boolean;
-
-	@IsOptional()
-	@Field(() => Boolean, { nullable: true })
-	carRent?: boolean;
+	carDescription?: string;
 
 	memberId?: ObjectId;
+}
 
-	@IsOptional()
-	@Field(() => Date, { nullable: true })
-	constructedAt?: Date;
+// 2. RANGE TYPES
+@InputType()
+export class YearRange {
+	@Field(() => Int)
+	start: number;
+
+	@Field(() => Int)
+	end: number;
 }
 
 @InputType()
@@ -78,68 +86,48 @@ export class PricesRange {
 	end: number;
 }
 
+// 3. SEARCH FILTERS  (Car Inquiry Search)
 @InputType()
-export class SquaresRange {
-	@Field(() => Int)
-	start: number;
-
-	@Field(() => Int)
-	end: number;
-}
-
-@InputType()
-export class PeriodsRange {
-	@Field(() => Date)
-	start: Date;
-
-	@Field(() => Date)
-	end: Date;
-}
-
-@InputType()
-class PISearch {
+class CISearch {
 	@IsOptional()
 	@Field(() => String, { nullable: true })
 	memberId?: ObjectId;
-
-	// @IsOptional()
-	// @Field(() => [CarLocation], { nullable: true })
-	// locationList?: CarLocation[];
 
 	@IsOptional()
 	@Field(() => [CarType], { nullable: true })
 	typeList?: CarType[];
 
 	@IsOptional()
-	@Field(() => [Int], { nullable: true })
-	roomsList?: Number[];
+	@Field(() => [CarBrand], { nullable: true })
+	brandList?: CarBrand[];
 
 	@IsOptional()
-	@Field(() => [Int], { nullable: true })
-	bedsList?: Number[];
+	@Field(() => [CarFuelType], { nullable: true })
+	fuelList?: CarFuelType[];
 
-	// @IsOptional()
-	// @IsIn(availableOptions, { each: true })
-	// @Field(() => [String], { nullable: true })
-	// options?: string[];
+	@IsOptional()
+	@Field(() => [CarTransmission], { nullable: true })
+	transmissionList?: CarTransmission[];
+
+	@IsOptional()
+	@Field(() => [CarColor], { nullable: true })
+	colorList?: CarColor[];
 
 	@IsOptional()
 	@Field(() => PricesRange, { nullable: true })
 	pricesRange?: PricesRange;
 
 	@IsOptional()
-	@Field(() => PeriodsRange, { nullable: true })
-	periodsRange?: PeriodsRange;
+	@Field(() => YearRange, { nullable: true })
+	yearRange?: YearRange;
 
 	@IsOptional()
-	@Field(() => SquaresRange, { nullable: true })
-	squaresRange?: SquaresRange;
-
-	@IsOptional()
+	@Length(2, 100)
 	@Field(() => String, { nullable: true })
 	text?: string;
 }
 
+// 4. CAR LISTING QUERY  (Cars Inquiry)
 @InputType()
 export class CarsInquiry {
 	@IsNotEmpty()
@@ -162,19 +150,20 @@ export class CarsInquiry {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() => PISearch)
-	search: PISearch;
+	@Field(() => CISearch)
+	search: CISearch;
 }
 
+// 5. SELLER CARS INQUIRY
 @InputType()
-class APISearch {
+class SPISearch {
 	@IsOptional()
 	@Field(() => CarStatus, { nullable: true })
 	carStatus?: CarStatus;
 }
 
 @InputType()
-export class AgentCarsInquiry {
+export class SellerCarsInquiry {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
@@ -195,19 +184,20 @@ export class AgentCarsInquiry {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() => APISearch)
-	search: APISearch;
+	@Field(() => SPISearch)
+	search: SPISearch;
 }
 
+// 6. ALL CARS INQUIRY
 @InputType()
-class ALPISearch {
+class ALCISearch {
 	@IsOptional()
 	@Field(() => CarStatus, { nullable: true })
 	carStatus?: CarStatus;
 
-	// @IsOptional()
-	// @Field(() => [CarLocation], { nullable: true })
-	// carLocationList?: CarLocation[];
+	@IsOptional()
+	@Field(() => [CarBrand], { nullable: true })
+	carBrandList?: CarBrand[];
 }
 
 @InputType()
@@ -232,11 +222,11 @@ export class AllCarsInquiry {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() => ALPISearch)
-	search: ALPISearch;
+	@Field(() => ALCISearch)
+	search: ALCISearch;
 }
 
-// For Favorite Cars
+// 7. For Favorite Cars
 @InputType()
 export class OrdinaryInquiry {
 	@IsNotEmpty()

@@ -9,7 +9,7 @@ registerEnumType(CarType, {
 	name: 'CarType',
 });
 
-export enum CarMake {
+export enum CarBrand {
 	HYUNDAI = 'HYUNDAI',
 	KIA = 'BUSAN',
 	GENESIS = 'GENESIS',
@@ -21,8 +21,8 @@ export enum CarMake {
 	TESLA = 'TESLA',
 	BYD = 'BYD',
 }
-registerEnumType(CarMake, {
-	name: 'CarMake',
+registerEnumType(CarBrand, {
+	name: 'CarBrand',
 });
 
 export enum CarStatus {
@@ -38,6 +38,8 @@ export enum CarFuelType {
 	PETROL = 'PETROL',
 	ELECTRIC = 'ELECTRIC',
 	HYBRID = 'HYBRID',
+	// LPG = 'LPG'
+	// DIESEL = 'DIESEL'
 }
 registerEnumType(CarFuelType, {
 	name: 'CarFuelType',
@@ -49,4 +51,18 @@ export enum CarTransmission {
 }
 registerEnumType(CarTransmission, {
 	name: 'CarTransmission',
+});
+
+export enum CarColor {
+	WHITE = 'WHITE ',
+	BLACK = 'BLACK ',
+	GRAY = 'GRAY ',
+	RED = 'RED ',
+	BLUE = 'BLUE ',
+	SILVER = 'SILVER ',
+	// GREEN = 'GREEN',
+	// ORANGE = 'ORANGE',
+}
+registerEnumType(CarColor, {
+	name: 'CarColor',
 });

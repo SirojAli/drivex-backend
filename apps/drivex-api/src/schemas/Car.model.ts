@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { CarType, CarMake, CarStatus, CarFuelType, CarTransmission } from '../libs/enums/car.enum';
+import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarColor } from '../libs/enums/car.enum';
 
 const CarSchema = new Schema(
 	{
@@ -16,9 +16,9 @@ const CarSchema = new Schema(
 			default: CarStatus.ACTIVE,
 		},
 
-		carMake: {
+		carBrand: {
 			type: String,
-			enum: CarMake,
+			enum: CarBrand,
 			required: true,
 		},
 
@@ -49,11 +49,12 @@ const CarSchema = new Schema(
 			min: 0,
 		},
 
-		carMileage: {
-			type: Number,
-			required: true,
-			min: 0,
-		},
+		// !!! Because of New Car, There is no need carMileage
+		// carMileage: {
+		// 	type: Number,
+		// 	required: true,
+		// 	min: 0,
+		// },
 
 		carFuelType: {
 			type: String,
@@ -70,6 +71,7 @@ const CarSchema = new Schema(
 
 		carColor: {
 			type: String,
+			enum: CarColor,
 			required: true,
 		},
 
@@ -92,7 +94,7 @@ const CarSchema = new Schema(
 			default: 0,
 		},
 
-		// Remove carRent and carBarter (written in ER Modeling)
+		// Remove carRent and carBarter (which written in ER Modeling)
 
 		carLikes: {
 			type: Number,
@@ -117,10 +119,6 @@ const CarSchema = new Schema(
 		deletedAt: {
 			type: Date,
 		},
-
-		constructedAt: {
-			type: Date,
-		},
 	},
 	{ timestamps: true, collection: 'cars' },
 );
@@ -129,7 +127,7 @@ const CarSchema = new Schema(
 // Bu compound-index. Bu beshta ma'lumot -> bir vaqtda unique b-i kk
 CarSchema.index(
 	{
-		carMake: 1,
+		carBrand: 1,
 		carModel: 1,
 		carYear: 1,
 		carPrice: 1,

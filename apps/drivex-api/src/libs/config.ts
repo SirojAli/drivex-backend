@@ -4,8 +4,8 @@ import * as path from 'path';
 import { T } from './types/common';
 import { pipeline } from 'stream';
 
-/** Agent related **/
-export const availableAgentSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank'];
+/** Seller related **/
+export const availableSellerSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank'];
 export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews'];
 
 /** Car related **/

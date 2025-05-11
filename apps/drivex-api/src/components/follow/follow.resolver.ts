@@ -1,6 +1,6 @@
 import { FollowService } from './follow.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { MemberInput, LoginInput, AgentsInquiry, MembersInquiry } from '../../libs/dto/member/member.input';
+import { MemberInput, LoginInput, SellersInquiry, MembersInquiry } from '../../libs/dto/member/member.input';
 import { Member, Members } from '../../libs/dto/member/member';
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/guards/auth.guard';

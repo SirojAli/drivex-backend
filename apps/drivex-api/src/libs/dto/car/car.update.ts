@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import { CarType, CarMake, CarStatus, CarFuelType, CarTransmission } from '../../enums/car.enum';
+import { IsIn, IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
+import { CarBrand, CarColor, CarFuelType, CarStatus, CarTransmission, CarType } from '../../enums/car.enum';
 import { ObjectId } from 'mongoose';
 
 @InputType()
@@ -17,9 +17,14 @@ export class CarUpdate {
 	@Field(() => CarStatus, { nullable: true })
 	carStatus?: CarStatus;
 
-	// @IsOptional()
-	// @Field(() => CarLocation, { nullable: true })
-	// carLocation?: CarLocation;
+	@IsOptional()
+	@Field(() => CarBrand, { nullable: true })
+	carBrand?: CarBrand;
+
+	@IsOptional()
+	@Length(1, 100)
+	@Field(() => String, { nullable: true })
+	carModel?: string;
 
 	@IsOptional()
 	@Length(3, 100)
@@ -33,23 +38,24 @@ export class CarUpdate {
 
 	@IsOptional()
 	@Field(() => Number, { nullable: true })
+	carYear?: number;
+
+	@IsOptional()
+	@Min(0)
+	@Field(() => Number, { nullable: true })
 	carPrice?: number;
 
 	@IsOptional()
-	@Field(() => Number, { nullable: true })
-	carSquare?: number;
+	@Field(() => CarFuelType, { nullable: true })
+	carFuelType?: CarFuelType;
 
 	@IsOptional()
-	@IsInt()
-	@Min(1)
-	@Field(() => Int, { nullable: true })
-	carBeds?: number;
+	@Field(() => CarTransmission, { nullable: true })
+	carTransmission?: CarTransmission;
 
 	@IsOptional()
-	@IsInt()
-	@Min(1)
-	@Field(() => Int, { nullable: true })
-	carRooms?: number;
+	@Field(() => CarColor, { nullable: true })
+	carColor?: CarColor;
 
 	@IsOptional()
 	@Field(() => [String], { nullable: true })
@@ -58,21 +64,9 @@ export class CarUpdate {
 	@IsOptional()
 	@Length(5, 500)
 	@Field(() => String, { nullable: true })
-	carDesc?: string;
-
-	@IsOptional()
-	@Field(() => Boolean, { nullable: true })
-	carBarter?: boolean;
-
-	@IsOptional()
-	@Field(() => Boolean, { nullable: true })
-	carRent?: boolean;
+	carDescription?: string;
 
 	soldAt?: Date;
 
 	deletedAt?: Date;
-
-	@IsOptional()
-	@Field(() => Date, { nullable: true })
-	constructedAt?: Date;
 }

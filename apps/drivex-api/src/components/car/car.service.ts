@@ -3,7 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Cars, Car } from '../../libs/dto/car/car';
 import { MemberService } from '../member/member.service';
-import { AgentCarsInquiry, AllCarsInquiry, OrdinaryInquiry, CarsInquiry, CarInput } from '../../libs/dto/car/car.input';
+import {
+	SellerCarsInquiry,
+	AllCarsInquiry,
+	OrdinaryInquiry,
+	CarsInquiry,
+	CarInput,
+} from '../../libs/dto/car/car.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { ViewService } from '../view/view.service';
 import { StatisticModifier, T } from '../../libs/types/common';
@@ -28,7 +34,7 @@ export class CarService {
 	public async createCar(input: CarInput): Promise<Car> {
 		try {
 			const result = await this.carModel.create(input);
-			// AGENT yaratgan Car lar sonini oshirish mantig'i:
+			// Seller yaratgan Car lar sonini oshirish mantig'i:
 			await this.memberService.memberStatsEditor({
 				// Member data's manipulation-logic
 				_id: result.memberId,
@@ -133,7 +139,7 @@ export class CarService {
 		return await this.viewService.getVisitedCars(memberId, input);
 	}
 
-	public async getAgentCars(memberId: ObjectId, input: AgentCarsInquiry): Promise<Cars> {
+	public async getSellerCars(memberId: ObjectId, input: SellerCarsInquiry): Promise<Cars> {
 		const { carStatus } = input.search;
 		if (carStatus === CarStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
 

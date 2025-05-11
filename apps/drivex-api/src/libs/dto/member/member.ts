@@ -36,7 +36,7 @@ export class Member {
 	memberAddress?: string;
 
 	@Field(() => String, { nullable: true })
-	memberDesc?: string;
+	memberDescription?: string;
 
 	@Field(() => Int)
 	memberProperties: number;

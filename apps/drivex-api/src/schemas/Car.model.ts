@@ -9,6 +9,7 @@ const CarSchema = new Schema(
 			required: true,
 		},
 
+		// forgot to add 'carStatus' in ER Modeling
 		carStatus: {
 			type: String,
 			enum: CarStatus,
@@ -26,6 +27,7 @@ const CarSchema = new Schema(
 			required: true,
 		},
 
+		// forgot to add 'carAddress' in ER Modeling
 		carAddress: {
 			type: String,
 			required: true,
@@ -44,6 +46,7 @@ const CarSchema = new Schema(
 		carPrice: {
 			type: Number,
 			required: true,
+			min: 0,
 		},
 
 		carMileage: {
@@ -89,6 +92,8 @@ const CarSchema = new Schema(
 			default: 0,
 		},
 
+		// Remove carRent and carBarter (written in ER Modeling)
+
 		carLikes: {
 			type: Number,
 			default: 0,
@@ -120,13 +125,15 @@ const CarSchema = new Schema(
 	{ timestamps: true, collection: 'cars' },
 );
 
+// Goal: Seller can't list (create) the same car twice
+// Bu compound-index. Bu beshta ma'lumot -> bir vaqtda unique b-i kk
 CarSchema.index(
 	{
 		carMake: 1,
 		carModel: 1,
 		carYear: 1,
-		carAddress: 1,
 		carPrice: 1,
+		memberId: 1,
 	},
 	{ unique: true },
 );

@@ -16,9 +16,19 @@ import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
 import { Message } from '../../libs/enums/common.enum';
 
+// MVC dagi kabi: Resolver = Controller
 @Resolver()
 export class MemberResolver {
 	constructor(private readonly memberService: MemberService) {}
+	// MVC dagidek constructor <MemberService> injectable-class-modelini chaqiramiz.
+	// Maqsad: MemberResolver ning xohlagan joyida MemberService ni ishlatish
+	//     REST API    ||   GRAPHQL API
+	//        GET      ||    QUERY
+	//        POST     ||    MUTATION
+
+	// Member Resolverda: Boshqaruvchi mantiqlar yoziladi
+	// Asosiy mantiqlar Member-service da yoziladi.
+	//
 
 	@Mutation(() => Member)
 	public async signup(@Args('input') input: MemberInput): Promise<Member> {

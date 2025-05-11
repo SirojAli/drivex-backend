@@ -20,6 +20,11 @@ import { lookupAuthMemberLiked } from '../../libs/config';
 @Injectable()
 export class MemberService {
 	constructor(
+		// Member-Service da Databasedagi CRUD operatorlarini amalga oshirish uchun:
+		// <Member> Schema Modelini chaqirib olamiz (foydalanish uchun)
+		//  Bundan avval, uni Member Modulega chaqirib ol -> kn uni import qil
+		// @nestjs/mongoose dan InjectModel ni chaqirvol.
+
 		@InjectModel('Member') private readonly memberModel: Model<Member>,
 		@InjectModel('Follow') private readonly followModel: Model<Follower | Following>,
 

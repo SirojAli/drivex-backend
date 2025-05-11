@@ -8,21 +8,13 @@ import { pipeline } from 'stream';
 export const availableAgentSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank'];
 export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews'];
 
-/** Property related **/
-export const availableOptions = ['propertyBarter', 'propertyRent'];
-export const availablePropertySorts = [
-	'createdAt',
-	'updatedAt',
-	'propertyLikes',
-	'propertyViews',
-	'propertyRank',
-	'propertyPrice',
-];
+/** Car related **/
+export const availableCarSorts = ['createdAt', 'updatedAt', 'carLikes', 'carViews', 'carRank', 'carPrice'];
 
-/** Property related **/
+/** Article related **/
 export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews'];
 
-/** Property related **/
+/** Comment related **/
 export const availableCommentSorts = ['createdAt', 'updatedAt'];
 
 /** IMAGE CONFIGURATION  */
@@ -135,22 +127,22 @@ export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => {
 	};
 };
 
-/** Favorite Property Complex Query Logic  */
+/** Favorite Car Complex Query Logic  */
 export const lookupFavorite = {
 	$lookup: {
 		from: 'members',
-		localField: 'favoriteProperty.memberId',
+		localField: 'favoriteCar.memberId',
 		foreignField: '_id',
-		as: 'favoriteProperty.memberData',
+		as: 'favoriteCar.memberData',
 	},
 };
 
-/** Visited Property Query Logic  */
+/** Visited Car Query Logic  */
 export const lookupVisit = {
 	$lookup: {
 		from: 'members',
-		localField: 'visitedProperty.memberId',
+		localField: 'visitedCar.memberId',
 		foreignField: '_id',
-		as: 'visitedProperty.memberData',
+		as: 'visitedCar.memberData',
 	},
 };

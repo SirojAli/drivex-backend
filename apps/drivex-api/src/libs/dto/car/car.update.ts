@@ -1,72 +1,72 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/car.enum';
+import { CarType, CarMake, CarStatus, CarFuelType, CarTransmission } from '../../enums/car.enum';
 import { ObjectId } from 'mongoose';
 
 @InputType()
-export class PropertyUpdate {
+export class CarUpdate {
 	@IsNotEmpty()
 	@Field(() => String)
 	_id: ObjectId;
 
 	@IsOptional()
-	@Field(() => PropertyType, { nullable: true })
-	propertyType?: PropertyType;
+	@Field(() => CarType, { nullable: true })
+	carType?: CarType;
 
 	@IsOptional()
-	@Field(() => PropertyStatus, { nullable: true })
-	propertyStatus?: PropertyStatus;
+	@Field(() => CarStatus, { nullable: true })
+	carStatus?: CarStatus;
 
-	@IsOptional()
-	@Field(() => PropertyLocation, { nullable: true })
-	propertyLocation?: PropertyLocation;
-
-	@IsOptional()
-	@Length(3, 100)
-	@Field(() => String, { nullable: true })
-	propertyAddress?: string;
+	// @IsOptional()
+	// @Field(() => CarLocation, { nullable: true })
+	// carLocation?: CarLocation;
 
 	@IsOptional()
 	@Length(3, 100)
 	@Field(() => String, { nullable: true })
-	propertyTitle?: string;
+	carAddress?: string;
+
+	@IsOptional()
+	@Length(3, 100)
+	@Field(() => String, { nullable: true })
+	carTitle?: string;
 
 	@IsOptional()
 	@Field(() => Number, { nullable: true })
-	propertyPrice?: number;
+	carPrice?: number;
 
 	@IsOptional()
 	@Field(() => Number, { nullable: true })
-	propertySquare?: number;
+	carSquare?: number;
 
 	@IsOptional()
 	@IsInt()
 	@Min(1)
 	@Field(() => Int, { nullable: true })
-	propertyBeds?: number;
+	carBeds?: number;
 
 	@IsOptional()
 	@IsInt()
 	@Min(1)
 	@Field(() => Int, { nullable: true })
-	propertyRooms?: number;
+	carRooms?: number;
 
 	@IsOptional()
 	@Field(() => [String], { nullable: true })
-	propertyImages?: string[];
+	carImages?: string[];
 
 	@IsOptional()
 	@Length(5, 500)
 	@Field(() => String, { nullable: true })
-	propertyDesc?: string;
+	carDesc?: string;
 
 	@IsOptional()
 	@Field(() => Boolean, { nullable: true })
-	propertyBarter?: boolean;
+	carBarter?: boolean;
 
 	@IsOptional()
 	@Field(() => Boolean, { nullable: true })
-	propertyRent?: boolean;
+	carRent?: boolean;
 
 	soldAt?: Date;
 

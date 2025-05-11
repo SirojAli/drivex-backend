@@ -1,64 +1,64 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/car.enum';
+import { CarType, CarMake, CarStatus, CarFuelType, CarTransmission } from '../../enums/car.enum';
 import { Member, TotalCounter } from '../member/member';
 import { MeLiked } from '../like/like';
 
 @ObjectType()
-export class Property {
+export class Car {
 	@Field(() => String)
 	_id: ObjectId;
 
-	@Field(() => PropertyType)
-	propertyType: PropertyType;
+	@Field(() => CarType)
+	carType: CarType;
 
-	@Field(() => PropertyStatus)
-	propertyStatus: PropertyStatus;
+	@Field(() => CarStatus)
+	carStatus: CarStatus;
 
-	@Field(() => PropertyLocation)
-	propertyLocation: PropertyLocation;
-
-	@Field(() => String)
-	propertyAddress: string;
+	// @Field(() => CarLocation)
+	// carLocation: CarLocation;
 
 	@Field(() => String)
-	propertyTitle: string;
+	carAddress: string;
+
+	@Field(() => String)
+	carTitle: string;
 
 	@Field(() => Number)
-	propertyPrice: number;
+	carPrice: number;
 
 	@Field(() => Number)
-	propertySquare: number;
+	carSquare: number;
 
 	@Field(() => Int)
-	propertyBeds: number;
+	carBeds: number;
 
 	@Field(() => Int)
-	propertyRooms: number;
+	carRooms: number;
 
 	@Field(() => Int)
-	propertyViews: number;
+	carViews: number;
 
 	@Field(() => Int)
-	propertyLikes: number;
+	carLikes: number;
 
 	@Field(() => Int)
-	propertyComments: number;
+	carComments: number;
 
 	@Field(() => Int)
-	propertyRank: number;
+	carRank: number;
 
 	@Field(() => [String])
-	propertyImages: string[];
+	carImages: string[];
 
 	@Field(() => String, { nullable: true })
-	propertyDesc?: string;
+	carDesc?: string;
 
 	@Field(() => Boolean)
-	propertyBarter: boolean;
+	carBarter: boolean;
 
 	@Field(() => Boolean)
-	propertyRent: boolean;
+	carRent: boolean;
 
 	@Field(() => String)
 	memberId: ObjectId;
@@ -87,9 +87,9 @@ export class Property {
 }
 
 @ObjectType()
-export class Properties {
-	@Field(() => [Property])
-	list: Property[];
+export class Cars {
+	@Field(() => [Car])
+	list: Car[];
 
 	@Field(() => [TotalCounter], { nullable: true })
 	metaCounter: TotalCounter[];

@@ -6,8 +6,8 @@ import { MemberType, MemberStatus, MemberAuthType } from '../libs/enums/member.e
 
 const MemberSchema = new Schema(
 	{
+		// Bu yerda yozilganlarning barchasi -> DATA SET lar (memberType, memberStatus...)
 		memberType: {
-			// memberType - DATA-SET
 			type: String,
 			enum: MemberType,
 			default: MemberType.USER,
@@ -17,7 +17,6 @@ const MemberSchema = new Schema(
 		},
 
 		memberStatus: {
-			// memberStatus ham DATA-SET
 			type: String,
 			enum: MemberStatus,
 			default: MemberStatus.ACTIVE,

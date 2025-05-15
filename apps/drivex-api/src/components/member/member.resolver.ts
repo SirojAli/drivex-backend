@@ -60,130 +60,130 @@ export class MemberResolver {
 	}
 
 	// Authenticated
-	@UseGuards(AuthGuard)
-	@Mutation(() => Member)
-	public async updateMember(
-		@Args('input') input: MemberUpdate,
-		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Member> {
-		console.log('Mutation: updateMember');
-		// console.log(typeof memberId);
-		// console.log('memberId:', memberId);
-		delete input._id;
-		return await this.memberService.updateMember(memberId, input);
-	}
+	// @UseGuards(AuthGuard)
+	// @Mutation(() => Member)
+	// public async updateMember(
+	// 	@Args('input') input: MemberUpdate,
+	// 	@AuthMember('_id') memberId: ObjectId,
+	// ): Promise<Member> {
+	// 	console.log('Mutation: updateMember');
+	// 	// console.log(typeof memberId);
+	// 	// console.log('memberId:', memberId);
+	// 	delete input._id;
+	// 	return await this.memberService.updateMember(memberId, input);
+	// }
 
-	@UseGuards(WithoutGuard)
-	@Query(() => Member)
-	public async getMember(@Args('memberId') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Member> {
-		console.log('Query: getMember');
-		// console.log('memberId: memberId');
-		const targetId = shapeIntoMongoObjectId(input);
-		return await this.memberService.getMember(memberId, targetId);
-	}
+	// @UseGuards(WithoutGuard)
+	// @Query(() => Member)
+	// public async getMember(@Args('memberId') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Member> {
+	// 	console.log('Query: getMember');
+	// 	// console.log('memberId: memberId');
+	// 	const targetId = shapeIntoMongoObjectId(input);
+	// 	return await this.memberService.getMember(memberId, targetId);
+	// }
 
-	@UseGuards(WithoutGuard)
-	@Query(() => Members)
-	public async getSellers(
-		@Args('input') input: SellersInquiry,
-		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Members> {
-		console.log('Query: getSellers');
-		return await this.memberService.getSellers(memberId, input);
-	}
+	// @UseGuards(WithoutGuard)
+	// @Query(() => Members)
+	// public async getSellers(
+	// 	@Args('input') input: SellersInquiry,
+	// 	@AuthMember('_id') memberId: ObjectId,
+	// ): Promise<Members> {
+	// 	console.log('Query: getSellers');
+	// 	return await this.memberService.getSellers(memberId, input);
+	// }
 
-	@UseGuards(AuthGuard)
-	@Mutation(() => Member)
-	public async likeTargetMember(
-		@Args('memberId') input: string,
-		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Member> {
-		console.log('Mutation: likeTargetMember');
-		const likeRefId = shapeIntoMongoObjectId(input);
-		return await this.memberService.likeTargetMember(memberId, likeRefId);
-	}
+	// @UseGuards(AuthGuard)
+	// @Mutation(() => Member)
+	// public async likeTargetMember(
+	// 	@Args('memberId') input: string,
+	// 	@AuthMember('_id') memberId: ObjectId,
+	// ): Promise<Member> {
+	// 	console.log('Mutation: likeTargetMember');
+	// 	const likeRefId = shapeIntoMongoObjectId(input);
+	// 	return await this.memberService.likeTargetMember(memberId, likeRefId);
+	// }
 
-	/** ADMIN **/
-	@Roles(MemberType.ADMIN)
-	@UseGuards(RolesGuard)
-	@Query(() => Members)
-	public async getAllMembersByAdmin(@Args('input') input: MembersInquiry): Promise<Members> {
-		console.log('Query: getAllMembersByAdmin');
-		return await this.memberService.getAllMembersByAdmin(input);
-	}
+	// /** ADMIN **/
+	// @Roles(MemberType.ADMIN)
+	// @UseGuards(RolesGuard)
+	// @Query(() => Members)
+	// public async getAllMembersByAdmin(@Args('input') input: MembersInquiry): Promise<Members> {
+	// 	console.log('Query: getAllMembersByAdmin');
+	// 	return await this.memberService.getAllMembersByAdmin(input);
+	// }
 
-	@Roles(MemberType.ADMIN)
-	@UseGuards(RolesGuard)
-	@Mutation(() => Member)
-	public async updateMemberByAdmin(@Args('input') input: MemberUpdate): Promise<Member> {
-		console.log('Mutation: updateMemberByAdmin');
-		return await this.memberService.updateMemberByAdmin(input);
-	}
+	// @Roles(MemberType.ADMIN)
+	// @UseGuards(RolesGuard)
+	// @Mutation(() => Member)
+	// public async updateMemberByAdmin(@Args('input') input: MemberUpdate): Promise<Member> {
+	// 	console.log('Mutation: updateMemberByAdmin');
+	// 	return await this.memberService.updateMemberByAdmin(input);
+	// }
 
-	/** IMAGE UPLOADER **/
-	@UseGuards(AuthGuard)
-	@Mutation((returns) => String)
-	public async imageUploader(
-		@Args({ name: 'file', type: () => GraphQLUpload })
-		{ createReadStream, filename, mimetype }: FileUpload,
-		@Args('target') target: String,
-	): Promise<string> {
-		console.log('Mutation: imageUploader');
+	// /** IMAGE UPLOADER **/
+	// @UseGuards(AuthGuard)
+	// @Mutation((returns) => String)
+	// public async imageUploader(
+	// 	@Args({ name: 'file', type: () => GraphQLUpload })
+	// 	{ createReadStream, filename, mimetype }: FileUpload,
+	// 	@Args('target') target: String,
+	// ): Promise<string> {
+	// 	console.log('Mutation: imageUploader');
 
-		if (!filename) throw new BadRequestException(Message.UPLOAD_FAILED);
-		const validMime = validMimeTypes.includes(mimetype);
-		if (!validMime) throw new BadRequestException(Message.PROVIDE_ALLOWED_FORMAT);
+	// 	if (!filename) throw new BadRequestException(Message.UPLOAD_FAILED);
+	// 	const validMime = validMimeTypes.includes(mimetype);
+	// 	if (!validMime) throw new BadRequestException(Message.PROVIDE_ALLOWED_FORMAT);
 
-		const imageName = getSerialForImage(filename);
-		const url = `uploads/${target}/${imageName}`;
-		const stream = createReadStream();
+	// 	const imageName = getSerialForImage(filename);
+	// 	const url = `uploads/${target}/${imageName}`;
+	// 	const stream = createReadStream();
 
-		const result = await new Promise((resolve, reject) => {
-			stream
-				.pipe(createWriteStream(url))
-				.on('finish', async () => resolve(true))
-				.on('error', () => reject(false));
-		});
-		if (!result) throw new BadRequestException(Message.UPLOAD_FAILED);
-		return url;
-	}
+	// 	const result = await new Promise((resolve, reject) => {
+	// 		stream
+	// 			.pipe(createWriteStream(url))
+	// 			.on('finish', async () => resolve(true))
+	// 			.on('error', () => reject(false));
+	// 	});
+	// 	if (!result) throw new BadRequestException(Message.UPLOAD_FAILED);
+	// 	return url;
+	// }
 
-	@UseGuards(AuthGuard)
-	@Mutation((returns) => [String])
-	public async imagesUploader(
-		@Args('files', { type: () => [GraphQLUpload] })
-		files: Promise<FileUpload>[],
-		@Args('target') target: String,
-	): Promise<string[]> {
-		console.log('Mutation: imagesUploader');
+	// @UseGuards(AuthGuard)
+	// @Mutation((returns) => [String])
+	// public async imagesUploader(
+	// 	@Args('files', { type: () => [GraphQLUpload] })
+	// 	files: Promise<FileUpload>[],
+	// 	@Args('target') target: String,
+	// ): Promise<string[]> {
+	// 	console.log('Mutation: imagesUploader');
 
-		const uploadedImages = [];
-		const promisedList = files.map(async (img: Promise<FileUpload>, index: number): Promise<Promise<void>> => {
-			try {
-				const { filename, mimetype, encoding, createReadStream } = await img;
+	// 	const uploadedImages = [];
+	// 	const promisedList = files.map(async (img: Promise<FileUpload>, index: number): Promise<Promise<void>> => {
+	// 		try {
+	// 			const { filename, mimetype, encoding, createReadStream } = await img;
 
-				const validMime = validMimeTypes.includes(mimetype);
-				if (!validMime) throw new BadRequestException(Message.PROVIDE_ALLOWED_FORMAT);
+	// 			const validMime = validMimeTypes.includes(mimetype);
+	// 			if (!validMime) throw new BadRequestException(Message.PROVIDE_ALLOWED_FORMAT);
 
-				const imageName = getSerialForImage(filename);
-				const url = `uploads/${target}/${imageName}`;
-				const stream = createReadStream();
+	// 			const imageName = getSerialForImage(filename);
+	// 			const url = `uploads/${target}/${imageName}`;
+	// 			const stream = createReadStream();
 
-				const result = await new Promise((resolve, reject) => {
-					stream
-						.pipe(createWriteStream(url))
-						.on('finish', () => resolve(true))
-						.on('error', () => reject(false));
-				});
-				if (!result) throw new BadRequestException(Message.UPLOAD_FAILED);
+	// 			const result = await new Promise((resolve, reject) => {
+	// 				stream
+	// 					.pipe(createWriteStream(url))
+	// 					.on('finish', () => resolve(true))
+	// 					.on('error', () => reject(false));
+	// 			});
+	// 			if (!result) throw new BadRequestException(Message.UPLOAD_FAILED);
 
-				uploadedImages[index] = url;
-			} catch (err) {
-				console.log('Error, file missing!');
-			}
-		});
+	// 			uploadedImages[index] = url;
+	// 		} catch (err) {
+	// 			console.log('Error, file missing!');
+	// 		}
+	// 	});
 
-		await Promise.all(promisedList);
-		return uploadedImages;
-	}
+	// 	await Promise.all(promisedList);
+	// 	return uploadedImages;
+	// }
 }

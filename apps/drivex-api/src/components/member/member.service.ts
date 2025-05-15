@@ -70,156 +70,156 @@ export class MemberService {
 		return response;
 	}
 
-	public async updateMember(memberId: ObjectId, input: MemberUpdate): Promise<Member> {
-		const result: Member = await this.memberModel
-			.findOneAndUpdate(
-				{
-					_id: memberId,
-					memberStatus: MemberStatus.ACTIVE,
-				}, // FILTER
-				input, // UPDATE
-				{ new: true }, // OPTION
-			)
-			.exec();
-		if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
+	// public async updateMember(memberId: ObjectId, input: MemberUpdate): Promise<Member> {
+	// 	const result: Member = await this.memberModel
+	// 		.findOneAndUpdate(
+	// 			{
+	// 				_id: memberId,
+	// 				memberStatus: MemberStatus.ACTIVE,
+	// 			}, // FILTER
+	// 			input, // UPDATE
+	// 			{ new: true }, // OPTION
+	// 		)
+	// 		.exec();
+	// 	if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
 
-		// MemberData ni => Token qiberyapti
-		// Bu Login bb kirgandan kn, update->image qilishi uchun shu token bn oberishi muhim
-		result.accessToken = await this.authService.createToken(result);
-		return result;
-	}
+	// 	// MemberData ni => Token qiberyapti
+	// 	// Bu Login bb kirgandan kn, update->image qilishi uchun shu token bn oberishi muhim
+	// 	result.accessToken = await this.authService.createToken(result);
+	// 	return result;
+	// }
 
-	public async getMember(memberId: ObjectId, targetId: ObjectId): Promise<Member> {
-		const search: T = {
-			_id: targetId,
-			memberStatus: {
-				$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
-			},
-		};
-		const targetMember = await this.memberModel.findOne(search).lean().exec();
-		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	// public async getMember(memberId: ObjectId, targetId: ObjectId): Promise<Member> {
+	// 	const search: T = {
+	// 		_id: targetId,
+	// 		memberStatus: {
+	// 			$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
+	// 		},
+	// 	};
+	// 	const targetMember = await this.memberModel.findOne(search).lean().exec();
+	// 	if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-		if (memberId) {
-			// record view -> increase memberView
-			const viewInput: ViewInput = { memberId: memberId, viewRefId: targetId, viewGroup: ViewGroup.MEMBER };
-			const newView = await this.viewService.recordView(viewInput);
-			if (newView) {
-				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
-				targetMember.memberViews++;
-			}
+	// 	if (memberId) {
+	// 		// record view -> increase memberView
+	// 		const viewInput: ViewInput = { memberId: memberId, viewRefId: targetId, viewGroup: ViewGroup.MEMBER };
+	// 		const newView = await this.viewService.recordView(viewInput);
+	// 		if (newView) {
+	// 			await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
+	// 			targetMember.memberViews++;
+	// 		}
 
-			// meLiked
-			const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
-			targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
+	// 		// meLiked
+	// 		const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
+	// 		targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
 
-			// meFollowed
-			targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
-		}
-		return targetMember;
-	}
+	// 		// meFollowed
+	// 		targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
+	// 	}
+	// 	return targetMember;
+	// }
 
-	private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
-		const result = await this.followModel.findOne({ followingId: followingId, followerId: followerId }).exec();
-		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
-	}
+	// private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
+	// 	const result = await this.followModel.findOne({ followingId: followingId, followerId: followerId }).exec();
+	// 	return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
+	// }
 
-	public async getSellers(memberId: ObjectId, input: SellersInquiry): Promise<Members> {
-		const { text } = input.search;
-		const match: T = { memberType: MemberType.SELLER, memberStatus: MemberStatus.ACTIVE };
-		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
-		// const sort: T = { createdAt: -1 }
+	// public async getSellers(memberId: ObjectId, input: SellersInquiry): Promise<Members> {
+	// 	const { text } = input.search;
+	// 	const match: T = { memberType: MemberType.SELLER, memberStatus: MemberStatus.ACTIVE };
+	// 	const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+	// 	// const sort: T = { createdAt: -1 }
 
-		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
-		console.log('match:', match);
+	// 	if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
+	// 	console.log('match:', match);
 
-		const result = await this.memberModel
-			.aggregate([
-				// 1ta array = 1ta pipeline deyiladi (bo'ladi)
-				{ $match: match },
-				{ $sort: sort },
-				{
-					$facet: {
-						list: [
-							{ $skip: (input.page - 1) * input.limit },
-							{ $limit: input.limit },
-							lookupAuthMemberLiked(memberId), // $_id ni yozmasak ham b-i, bec: by-default shu qiymatni oberadi
-						],
-						metaCounter: [{ $count: 'total' }],
-					},
-				},
-			])
-			.exec();
-		console.log('result:', result);
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		return result[0];
-	}
+	// 	const result = await this.memberModel
+	// 		.aggregate([
+	// 			// 1ta array = 1ta pipeline deyiladi (bo'ladi)
+	// 			{ $match: match },
+	// 			{ $sort: sort },
+	// 			{
+	// 				$facet: {
+	// 					list: [
+	// 						{ $skip: (input.page - 1) * input.limit },
+	// 						{ $limit: input.limit },
+	// 						lookupAuthMemberLiked(memberId), // $_id ni yozmasak ham b-i, bec: by-default shu qiymatni oberadi
+	// 					],
+	// 					metaCounter: [{ $count: 'total' }],
+	// 				},
+	// 			},
+	// 		])
+	// 		.exec();
+	// 	console.log('result:', result);
+	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	// 	return result[0];
+	// }
 
-	public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
-		const target: Member = await this.memberModel
-			.findOne({
-				_id: likeRefId,
-				memberStatus: MemberStatus.ACTIVE,
-			})
-			.exec();
-		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	// public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
+	// 	const target: Member = await this.memberModel
+	// 		.findOne({
+	// 			_id: likeRefId,
+	// 			memberStatus: MemberStatus.ACTIVE,
+	// 		})
+	// 		.exec();
+	// 	if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-		const input: LikeInput = {
-			memberId: memberId,
-			likeRefId: likeRefId,
-			likeGroup: LikeGroup.MEMBER,
-		};
+	// 	const input: LikeInput = {
+	// 		memberId: memberId,
+	// 		likeRefId: likeRefId,
+	// 		likeGroup: LikeGroup.MEMBER,
+	// 	};
 
-		// LIKE TOGGLE via Like Modules   (like: -1 or +1)
-		const modifier: number = await this.likeService.toggleLike(input);
-		const result = await this.memberStatsEditor({
-			_id: likeRefId,
-			targetKey: 'memberLikes',
-			modifier: modifier,
-		});
+	// 	// LIKE TOGGLE via Like Modules   (like: -1 or +1)
+	// 	const modifier: number = await this.likeService.toggleLike(input);
+	// 	const result = await this.memberStatsEditor({
+	// 		_id: likeRefId,
+	// 		targetKey: 'memberLikes',
+	// 		modifier: modifier,
+	// 	});
 
-		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
-		return result;
-	}
+	// 	if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
+	// 	return result;
+	// }
 
-	/** ADMIN **/
-	public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
-		const { memberStatus, memberType, text } = input.search;
-		const match: T = {};
-		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+	// /** ADMIN **/
+	// public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
+	// 	const { memberStatus, memberType, text } = input.search;
+	// 	const match: T = {};
+	// 	const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
-		if (memberStatus) match.MemberStatus = memberStatus;
-		if (memberType) match.MemberType = memberType;
-		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
-		console.log('match:', match);
+	// 	if (memberStatus) match.MemberStatus = memberStatus;
+	// 	if (memberType) match.MemberType = memberType;
+	// 	if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
+	// 	console.log('match:', match);
 
-		const result = await this.memberModel
-			.aggregate([
-				{ $match: match },
-				{ $sort: sort },
-				{
-					$facet: {
-						list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }],
-						metaCounter: [{ $count: 'total' }],
-					},
-				},
-			])
-			.exec();
-		console.log('result:', result);
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		return result[0];
-	}
+	// 	const result = await this.memberModel
+	// 		.aggregate([
+	// 			{ $match: match },
+	// 			{ $sort: sort },
+	// 			{
+	// 				$facet: {
+	// 					list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }],
+	// 					metaCounter: [{ $count: 'total' }],
+	// 				},
+	// 			},
+	// 		])
+	// 		.exec();
+	// 	console.log('result:', result);
+	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	// 	return result[0];
+	// }
 
-	public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
-		const result: Member = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
-		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+	// public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
+	// 	const result: Member = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
+	// 	if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
-		return result;
-	}
+	// 	return result;
+	// }
 
 	//** Additional Logics **//
-	public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
-		console.log('executed');
-		const { _id, targetKey, modifier } = input;
-		return await this.memberModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
-	}
+	// public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
+	// 	console.log('executed');
+	// 	const { _id, targetKey, modifier } = input;
+	// 	return await this.memberModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
+	// }
 }

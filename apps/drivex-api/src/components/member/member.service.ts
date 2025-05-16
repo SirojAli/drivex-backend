@@ -20,11 +20,6 @@ import { lookupAuthMemberLiked } from '../../libs/config';
 @Injectable()
 export class MemberService {
 	constructor(
-		// Member-Service da Databasedagi CRUD operatorlarini amalga oshirish uchun:
-		// <Member> Schema Modelini chaqirib olamiz (foydalanish uchun)
-		//  Bundan avval, uni Member Modulega chaqirib ol -> kn uni import qil
-		// @nestjs/mongoose dan InjectModel ni chaqirvol.
-
 		@InjectModel('Member') private readonly memberModel: Model<Member>,
 		@InjectModel('Follow') private readonly followModel: Model<Follower | Following>,
 
@@ -34,11 +29,12 @@ export class MemberService {
 	) {}
 
 	public async signup(input: MemberInput): Promise<Member> {
-		//  Hash Password
+		//  Hashing Password
 		input.memberPassword = await this.authService.hashPassword(input.memberPassword);
 		try {
 			const result = await this.memberModel.create(input);
-			// Auth via Token
+
+			// Authentication via Token
 			result.accessToken = await this.authService.createToken(result);
 			// console.log('accessToken', accessToken);
 			return result;
@@ -50,11 +46,11 @@ export class MemberService {
 
 	public async login(input: LoginInput): Promise<Member> {
 		const { memberNick, memberPassword } = input;
+
 		const response: Member = await this.memberModel
 			.findOne({ memberNick: memberNick })
 			.select('+memberPassword')
 			.exec();
-
 		if (!response || response.memberStatus === MemberStatus.DELETE) {
 			throw new InternalServerErrorException(Message.NO_MEMBER_NICK);
 		} else if (response.memberStatus === MemberStatus.BLOCK) {
@@ -66,7 +62,6 @@ export class MemberService {
 		if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
 		// delete response.memberPassword
 		response.accessToken = await this.authService.createToken(response);
-
 		return response;
 	}
 

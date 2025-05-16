@@ -60,7 +60,7 @@ export class MemberService {
 		// TODO: Compare passwords
 		const isMatch = await this.authService.comparePasswords(input.memberPassword, response.memberPassword);
 		if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
-		// delete response.memberPassword
+		// delete response.memberPassword -> createToken da bu mantiqni yozganmiz
 		response.accessToken = await this.authService.createToken(response);
 		return response;
 	}

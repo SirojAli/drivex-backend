@@ -49,19 +49,19 @@ export class MemberResolver {
 		return `Hi ${authMember.memberNick}. You are ${authMember.memberType}. memberId: ${authMember._id}`;
 	}
 
-	// Authenticated
-	// @UseGuards(AuthGuard)
-	// @Mutation(() => Member)
-	// public async updateMember(
-	// 	@Args('input') input: MemberUpdate,
-	// 	@AuthMember('_id') memberId: ObjectId,
-	// ): Promise<Member> {
-	// 	console.log('Mutation: updateMember');
-	// 	// console.log(typeof memberId);
-	// 	// console.log('memberId:', memberId);
-	// 	delete input._id;
-	// 	return await this.memberService.updateMember(memberId, input);
-	// }
+	Authenticated;
+	@UseGuards(AuthGuard)
+	@Mutation(() => Member)
+	public async updateMember(
+		@Args('input') input: MemberUpdate,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Member> {
+		console.log('Mutation: updateMember');
+		// console.log(typeof memberId);
+		// console.log('memberId:', memberId);
+		delete input._id;
+		return await this.memberService.updateMember(memberId, input);
+	}
 
 	// @UseGuards(WithoutGuard)
 	// @Query(() => Member)
@@ -93,22 +93,22 @@ export class MemberResolver {
 	// 	return await this.memberService.likeTargetMember(memberId, likeRefId);
 	// }
 
-	// /** ADMIN **/
-	// @Roles(MemberType.ADMIN)
-	// @UseGuards(RolesGuard)
-	// @Query(() => Members)
-	// public async getAllMembersByAdmin(@Args('input') input: MembersInquiry): Promise<Members> {
-	// 	console.log('Query: getAllMembersByAdmin');
-	// 	return await this.memberService.getAllMembersByAdmin(input);
-	// }
+	/** ADMIN **/
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Query(() => Members)
+	public async getAllMembersByAdmin(@Args('input') input: MembersInquiry): Promise<Members> {
+		console.log('Query: getAllMembersByAdmin');
+		return await this.memberService.getAllMembersByAdmin(input);
+	}
 
-	// @Roles(MemberType.ADMIN)
-	// @UseGuards(RolesGuard)
-	// @Mutation(() => Member)
-	// public async updateMemberByAdmin(@Args('input') input: MemberUpdate): Promise<Member> {
-	// 	console.log('Mutation: updateMemberByAdmin');
-	// 	return await this.memberService.updateMemberByAdmin(input);
-	// }
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Mutation(() => Member)
+	public async updateMemberByAdmin(@Args('input') input: MemberUpdate): Promise<Member> {
+		console.log('Mutation: updateMemberByAdmin');
+		return await this.memberService.updateMemberByAdmin(input);
+	}
 
 	// /** IMAGE UPLOADER **/
 	// @UseGuards(AuthGuard)

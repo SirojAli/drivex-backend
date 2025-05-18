@@ -24,22 +24,24 @@ import { Member } from '../../libs/dto/member/member';
 export class CarResolver {
 	constructor(private readonly carService: CarService) {}
 
-	// @Roles(MemberType.SELLER)
-	// @UseGuards(RolesGuard)
-	// @Mutation(() => Car)
-	// public async createCar(
-	// 	@Args('input') input: CarInput, // InputType
-	// 	@AuthMember('_id') memberId: ObjectId,
-	// ): Promise<Car> {
-	// 	// ObjectType
-	// 	console.log('Mutation: createCar');
-	// 	input.memberId = memberId; // ID larni tekshirib oladi, xavfsizlik uchun
-	// 	return await this.carService.createCar(input);
-	// }
+	@Roles(MemberType.SELLER)
+	@UseGuards(RolesGuard)
+	@Mutation(() => Car)
+	public async createCar(
+		@Args('input') input: CarInput, // InputType
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Car> {
+		console.log('Mutation: createCar');
+		input.memberId = memberId;
+		return await this.carService.createCar(input);
+	}
 
 	// @UseGuards(WithoutGuard)
 	// @Query((returns) => Car)
-	// public async getCar(@Args('carId') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Car> {
+	// public async getCar(
+	// 	@Args('carId') input: string, // car-id
+	// 	@AuthMember('_id') memberId: ObjectId,
+	// ): Promise<Car> {
 	// 	console.log('Query: getCar');
 	// 	const carId = shapeIntoMongoObjectId(input);
 	// 	return await this.carService.getCar(memberId, carId);

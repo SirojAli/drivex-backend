@@ -27,16 +27,6 @@ export class CarUpdate {
 	carModel?: string;
 
 	@IsOptional()
-	@Length(3, 100)
-	@Field(() => String, { nullable: true })
-	carAddress?: string;
-
-	@IsOptional()
-	@Length(3, 100)
-	@Field(() => String, { nullable: true })
-	carTitle?: string;
-
-	@IsOptional()
 	@Field(() => Number, { nullable: true })
 	carYear?: number;
 

@@ -9,27 +9,17 @@ import { Direction } from '../../enums/common.enum';
 @InputType()
 export class CarInput {
 	@IsNotEmpty()
-	@Field(() => CarType)
-	carType: CarType;
-
-	@IsNotEmpty()
 	@Field(() => CarBrand)
 	carBrand: CarBrand;
 
 	@IsNotEmpty()
-	@Length(1, 50)
+	@Length(1, 30)
 	@Field(() => String)
 	carModel: string;
 
 	@IsNotEmpty()
-	@Length(3, 100)
-	@Field(() => String)
-	carAddress: string;
-
-	@IsNotEmpty()
-	@Length(3, 100)
-	@Field(() => String)
-	carTitle: string;
+	@Field(() => CarType)
+	carType: CarType;
 
 	@IsNotEmpty()
 	@Field(() => Number)
@@ -38,10 +28,6 @@ export class CarInput {
 	@IsNotEmpty()
 	@Field(() => Number)
 	carPrice: number;
-
-	// @IsNotEmpty()
-	// @Field(() => Number)
-	// carMileage: number;
 
 	@IsNotEmpty()
 	@Field(() => CarFuelType)

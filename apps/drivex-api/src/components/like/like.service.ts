@@ -57,41 +57,41 @@ export class LikeService {
 	}
 
 	// For Favorite Cars
-	// public async getFavoriteCars(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
-	// 	const { page, limit } = input;
-	// 	const match: T = { likeGroup: LikeGroup.CAR, memberId: memberId };
+	public async getFavoriteCars(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
+		const { page, limit } = input;
+		const match: T = { likeGroup: LikeGroup.CAR, memberId: memberId };
 
-	// 	const data: T = await this.likeModel
-	// 		.aggregate([
-	// 			{ $match: match },
-	// 			{ $sort: { updatedAt: -1 } },
-	// 			{
-	// 				$lookup: {
-	// 					from: 'cars',
-	// 					localField: 'likeRefId',
-	// 					foreignField: '_id',
-	// 					as: 'favoriteCar',
-	// 				},
-	// 			},
-	// 			{ $unwind: '$favoriteCar' },
-	// 			{
-	// 				$facet: {
-	// 					list: [
-	// 						{ $skip: (page - 1) * limit },
-	// 						{ $limit: limit },
-	// 						lookupFavorite,
-	// 						{ $unwind: '$favoriteCar.memberData' },
-	// 					],
-	// 					metaCounter: [{ $count: 'total' }],
-	// 				},
-	// 			},
-	// 		])
-	// 		.exec();
-	// 	// console.log('data:', data);
-	// 	const result: Cars = { list: [], metaCounter: data[0].metaCounter };
+		const data: T = await this.likeModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: { updatedAt: -1 } },
+				{
+					$lookup: {
+						from: 'cars',
+						localField: 'likeRefId',
+						foreignField: '_id',
+						as: 'favoriteCar',
+					},
+				},
+				{ $unwind: '$favoriteCar' },
+				{
+					$facet: {
+						list: [
+							{ $skip: (page - 1) * limit },
+							{ $limit: limit },
+							lookupFavorite,
+							{ $unwind: '$favoriteCar.memberData' },
+						],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
+		// console.log('data:', data);
+		const result: Cars = { list: [], metaCounter: data[0].metaCounter };
 
-	// 	result.list = data[0].list.map((ele) => ele.favoriteCar);
-	// 	console.log('result:', result);
-	// 	return result;
-	// }
+		result.list = data[0].list.map((ele) => ele.favoriteCar);
+		console.log('result:', result);
+		return result;
+	}
 }

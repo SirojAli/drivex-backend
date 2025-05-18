@@ -31,22 +31,20 @@ export class CarService {
 		private likeService: LikeService,
 	) {}
 
-	// public async createCar(input: CarInput): Promise<Car> {
-	// 	try {
-	// 		const result = await this.carModel.create(input);
-	// 		// Seller yaratgan Car lar sonini oshirish mantig'i:
-	// 		await this.memberService.memberStatsEditor({
-	// 			// Member data's manipulation-logic
-	// 			_id: result.memberId,
-	// 			targetKey: 'memberCars',
-	// 			modifier: 1,
-	// 		});
-	// 		return result;
-	// 	} catch (err) {
-	// 		console.log('Error, Service.model:', err.message);
-	// 		throw new BadRequestException(Message.CREATE_FAILED);
-	// 	}
-	// }
+	public async createCar(input: CarInput): Promise<Car> {
+		try {
+			const result = await this.carModel.create(input);
+			await this.memberService.memberStatsEditor({
+				_id: result.memberId,
+				targetKey: 'memberCars',
+				modifier: 1,
+			});
+			return result;
+		} catch (err) {
+			console.log('Error, Service.model:', err.message);
+			throw new BadRequestException(Message.CREATE_FAILED);
+		}
+	}
 
 	// public async getCar(memberId: ObjectId, carId: ObjectId): Promise<Car> {
 	// 	const search: T = {

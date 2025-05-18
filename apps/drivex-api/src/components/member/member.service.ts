@@ -221,11 +221,16 @@ export class MemberService {
 		return result;
 	}
 
-	//** Additional Logics **//
-	// public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
-	// 	console.log('executed');
-	// 	const { _id, targetKey, modifier } = input;
-	// 	return await this.memberModel
-	// .findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
-	// }
+	// ** Additional Logics **//
+	public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
+		console.log('executed');
+		const { _id, targetKey, modifier } = input;
+		return await this.memberModel
+			.findByIdAndUpdate(
+				_id, // id
+				{ $inc: { [targetKey]: modifier } }, // increase
+				{ new: true }, // refresh
+			)
+			.exec();
+	}
 }

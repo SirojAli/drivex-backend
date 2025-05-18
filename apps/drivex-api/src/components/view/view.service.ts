@@ -27,41 +27,41 @@ export class ViewService {
 		return await this.viewModel.findOne(search).exec();
 	}
 
-	// public async getVisitedCars(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
-	// 	const { page, limit } = input;
-	// 	const match: T = { viewGroup: ViewGroup.CAR, memberId: memberId };
+	public async getVisitedCars(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
+		const { page, limit } = input;
+		const match: T = { viewGroup: ViewGroup.CAR, memberId: memberId };
 
-	// 	const data: T = await this.viewModel
-	// 		.aggregate([
-	// 			{ $match: match },
-	// 			{ $sort: { updatedAt: -1 } },
-	// 			{
-	// 				$lookup: {
-	// 					from: 'cars',
-	// 					localField: 'viewRefId',
-	// 					foreignField: '_id',
-	// 					as: 'visitedCar',
-	// 				},
-	// 			},
-	// 			{ $unwind: '$visitedCar' },
-	// 			{
-	// 				$facet: {
-	// 					list: [
-	// 						{ $skip: (page - 1) * limit },
-	// 						{ $limit: limit },
-	// 						lookupVisit,
-	// 						{ $unwind: '$visitedCar.memberData' },
-	// 					],
-	// 					metaCounter: [{ $count: 'total' }],
-	// 				},
-	// 			},
-	// 		])
-	// 		.exec();
-	// 	// console.log('data:', data);
-	// 	const result: Cars = { list: [], metaCounter: data[0].metaCounter };
+		const data: T = await this.viewModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: { updatedAt: -1 } },
+				{
+					$lookup: {
+						from: 'cars',
+						localField: 'viewRefId',
+						foreignField: '_id',
+						as: 'visitedCar',
+					},
+				},
+				{ $unwind: '$visitedCar' },
+				{
+					$facet: {
+						list: [
+							{ $skip: (page - 1) * limit },
+							{ $limit: limit },
+							lookupVisit,
+							{ $unwind: '$visitedCar.memberData' },
+						],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
+		// console.log('data:', data);
+		const result: Cars = { list: [], metaCounter: data[0].metaCounter };
 
-	// 	result.list = data[0].list.map((ele) => ele.visitedCar);
-	// 	console.log('result:', result);
-	// 	return result;
-	// }
+		result.list = data[0].list.map((ele) => ele.visitedCar);
+		console.log('result:', result);
+		return result;
+	}
 }

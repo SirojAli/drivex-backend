@@ -3,13 +3,6 @@ import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarColor } 
 
 const CarSchema = new Schema(
 	{
-		carType: {
-			type: String,
-			enum: CarType,
-			required: true,
-		},
-
-		// forgot to add 'carStatus' in ER Modeling
 		carStatus: {
 			type: String,
 			enum: CarStatus,
@@ -27,14 +20,9 @@ const CarSchema = new Schema(
 			required: true,
 		},
 
-		// forgot to add 'carAddress' in ER Modeling
-		carAddress: {
+		carType: {
 			type: String,
-			required: true,
-		},
-
-		carTitle: {
-			type: String,
+			enum: CarType,
 			required: true,
 		},
 
@@ -48,13 +36,6 @@ const CarSchema = new Schema(
 			required: true,
 			min: 0,
 		},
-
-		// !!! Because of New Car, There is no need carMileage
-		// carMileage: {
-		// 	type: Number,
-		// 	required: true,
-		// 	min: 0,
-		// },
 
 		carFuelType: {
 			type: String,
@@ -94,8 +75,6 @@ const CarSchema = new Schema(
 			default: 0,
 		},
 
-		// Remove carRent and carBarter (which written in ER Modeling)
-
 		carLikes: {
 			type: Number,
 			default: 0,
@@ -124,14 +103,14 @@ const CarSchema = new Schema(
 );
 
 // Goal: Seller can't list (create) the same car twice
-// Bu compound-index. Bu beshta ma'lumot -> bir vaqtda unique b-i kk
+// It's compound-index. Those data should be unique at the same time
 CarSchema.index(
 	{
 		carBrand: 1,
 		carModel: 1,
 		carYear: 1,
 		carPrice: 1,
-		memberId: 1,
+		// memberId: 1, -> Add if need it
 	},
 	{ unique: true },
 );

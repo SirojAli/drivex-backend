@@ -9,41 +9,32 @@ export class Car {
 	@Field(() => String)
 	_id: ObjectId;
 
-	@Field(() => CarType)
-	carType: CarType;
-
 	@Field(() => CarStatus)
 	carStatus: CarStatus;
 
 	@Field(() => CarBrand)
-	carBrand: CarBrand;
+	carBrand: CarBrand; // e.g. "Hyundai"
 
 	@Field(() => String)
-	carModel: string;
+	carModel: string; // e.g. "Sonata"
 
-	@Field(() => String)
-	carAddress: string;
-
-	@Field(() => String)
-	carTitle: string;
+	@Field(() => CarType)
+	carType: CarType; // e.g. "Sedan"
 
 	@Field(() => Number)
-	carYear: number;
+	carYear: number; // e.g. "2022"
 
 	@Field(() => Number)
-	carPrice: number;
-
-	// @Field(() => Number)
-	// carMileage: number;
+	carPrice: number; // e.g. "44000"
 
 	@Field(() => CarFuelType)
-	carFuelType: CarFuelType;
+	carFuelType: CarFuelType; // e.g. "Petrol"
 
 	@Field(() => CarTransmission)
-	carTransmission: CarTransmission;
+	carTransmission: CarTransmission; // e.g. "Auto"
 
 	@Field(() => CarColor)
-	carColor: CarColor;
+	carColor: CarColor; // e.g. "Black"
 
 	@Field(() => [String])
 	carImages: string[];
@@ -58,10 +49,10 @@ export class Car {
 	carRank: number;
 
 	@Field(() => Int)
-	carViews: number;
+	carLikes: number;
 
 	@Field(() => Int)
-	carLikes: number;
+	carViews: number;
 
 	@Field(() => String)
 	memberId: ObjectId;

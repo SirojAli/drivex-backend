@@ -58,7 +58,8 @@ export class MemberService {
 		}
 
 		// TODO: Compare passwords
-		const isMatch = await this.authService.comparePasswords(input.memberPassword, response.memberPassword);
+		const isMatch = await this.authService // match/no-match
+			.comparePasswords(input.memberPassword, response.memberPassword);
 		if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
 		response.accessToken = await this.authService.createToken(response);
 		return response;
@@ -110,8 +111,16 @@ export class MemberService {
 		return targetMember;
 	}
 
-	private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
-		const result = await this.followModel.findOne({ followingId: followingId, followerId: followerId }).exec();
+	private async checkSubscription(
+		followerId: ObjectId, // follower-id
+		followingId: ObjectId, // following-id
+	): Promise<MeFollowed[]> {
+		const result = await this.followModel
+			.findOne({
+				followingId: followingId, // follower-id
+				followerId: followerId,
+			}) // following-id
+			.exec();
 		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
 	}
 
@@ -177,8 +186,8 @@ export class MemberService {
 		const match: T = {};
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
-		if (memberStatus) match.MemberStatus = memberStatus;
-		if (memberType) match.MemberType = memberType;
+		if (memberStatus) match.memberStatus = memberStatus;
+		if (memberType) match.memberType = memberType;
 		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
 		console.log('match:', match);
 
@@ -200,9 +209,15 @@ export class MemberService {
 	}
 
 	public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
-		const result: Member = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
-		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+		const result: Member = await this.memberModel
+			.findOneAndUpdate(
+				{ _id: input._id }, // id
+				input, // input
+				{ new: true }, // refresh
+			)
+			.exec();
 
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 		return result;
 	}
 
@@ -210,6 +225,7 @@ export class MemberService {
 	// public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
 	// 	console.log('executed');
 	// 	const { _id, targetKey, modifier } = input;
-	// 	return await this.memberModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
+	// 	return await this.memberModel
+	// .findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
 	// }
 }

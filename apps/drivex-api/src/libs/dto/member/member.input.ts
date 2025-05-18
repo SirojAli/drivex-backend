@@ -80,12 +80,12 @@ export class SellersInquiry {
 class MISearch {
 	// MI -> Members Inquiry
 	@IsOptional()
-	@Field(() => MemberType, { nullable: true })
-	memberType?: MemberType;
-
-	@IsOptional()
 	@Field(() => MemberStatus, { nullable: true })
 	memberStatus?: MemberStatus;
+
+	@IsOptional()
+	@Field(() => MemberType, { nullable: true })
+	memberType?: MemberType;
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })
@@ -115,5 +115,5 @@ export class MembersInquiry {
 
 	@IsNotEmpty()
 	@Field(() => MISearch)
-	search?: MISearch;
+	search: MISearch;
 }

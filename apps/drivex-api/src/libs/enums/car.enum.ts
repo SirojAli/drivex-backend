@@ -10,8 +10,8 @@ registerEnumType(CarType, {
 });
 
 export enum CarBrand {
+	KIA = 'KIA',
 	HYUNDAI = 'HYUNDAI',
-	KIA = 'BUSAN',
 	GENESIS = 'GENESIS',
 	BMW = 'BMW',
 	MERCEDES = 'MERCEDES',

@@ -13,19 +13,19 @@ import { lookupVisit } from '../../libs/config';
 export class ViewService {
 	constructor(@InjectModel('View') private readonly viewModel: Model<View>) {}
 
-	// public async recordView(input: ViewInput): Promise<View | null> {
-	// 	const viewExist = await this.checkViewExistance(input);
-	// 	if (!viewExist) {
-	// 		console.log('-- New View Insertion --');
-	// 		return await this.viewModel.create(input);
-	// 	} else return null;
-	// }
+	public async recordView(input: ViewInput): Promise<View | null> {
+		const viewExist = await this.checkViewExistance(input);
+		if (!viewExist) {
+			console.log('-- New View Insertion --');
+			return await this.viewModel.create(input);
+		} else return null;
+	}
 
-	// private async checkViewExistance(input: ViewInput): Promise<View> {
-	// 	const { memberId, viewRefId } = input;
-	// 	const search: T = { memberId: memberId, viewRefId: viewRefId };
-	// 	return await this.viewModel.findOne(search).exec();
-	// }
+	private async checkViewExistance(input: ViewInput): Promise<View> {
+		const { memberId, viewRefId } = input;
+		const search: T = { memberId: memberId, viewRefId: viewRefId };
+		return await this.viewModel.findOne(search).exec();
+	}
 
 	// public async getVisitedCars(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
 	// 	const { page, limit } = input;

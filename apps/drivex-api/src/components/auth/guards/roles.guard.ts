@@ -10,7 +10,6 @@ export class RolesGuard implements CanActivate {
 		private authService: AuthService,
 	) {}
 
-	// @ts-ignore
 	async canActivate(context: ExecutionContext | any): Promise<boolean> {
 		const roles = this.reflector.get<string[]>('roles', context.getHandler());
 		if (!roles) return true;

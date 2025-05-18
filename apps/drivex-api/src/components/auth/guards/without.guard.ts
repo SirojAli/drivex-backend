@@ -5,7 +5,6 @@ import { AuthService } from '../auth.service';
 export class WithoutGuard implements CanActivate {
 	constructor(private authService: AuthService) {}
 
-	// @ts-ignore
 	async canActivate(context: ExecutionContext | any): Promise<boolean> {
 		console.info('--- @guard() Authentication [WithoutGuard] ---');
 

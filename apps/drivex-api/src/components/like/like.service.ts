@@ -14,49 +14,49 @@ import { lookupFavorite } from '../../libs/config';
 export class LikeService {
 	constructor(@InjectModel('Like') private readonly likeModel: Model<Like>) {}
 
-	// public async toggleLike(input: LikeInput): Promise<number> {
-	// 	console.log('executed');
+	public async toggleLike(input: LikeInput): Promise<number> {
+		console.log('executed');
 
-	// 	const search: T = { memberId: input.memberId, likeRefId: input.likeRefId };
-	// 	const exist = await this.likeModel.findOne(search).exec();
-	// 	let modifier = 1;
+		const search: T = { memberId: input.memberId, likeRefId: input.likeRefId };
+		const exist = await this.likeModel.findOne(search).exec();
+		let modifier = 1;
 
-	// 	if (exist) {
-	// 		await this.likeModel.findOneAndDelete(search).exec();
-	// 		modifier = -1;
-	// 	} else {
-	// 		try {
-	// 			await this.likeModel.create(input);
-	// 		} catch (err) {
-	// 			console.log('ERROR, Service.model:', err.message);
-	// 			throw new BadRequestException(Message.CREATE_FAILED);
-	// 		}
-	// 	}
+		if (exist) {
+			await this.likeModel.findOneAndDelete(search).exec();
+			modifier = -1;
+		} else {
+			try {
+				await this.likeModel.create(input);
+			} catch (err) {
+				console.log('ERROR, Service.model:', err.message);
+				throw new BadRequestException(Message.CREATE_FAILED);
+			}
+		}
 
-	// 	console.log(`-- Like Modifier ${modifier} --`);
-	// 	return modifier;
-	// }
+		console.log(`-- Like Modifier ${modifier} --`);
+		return modifier;
+	}
 
-	// public async checkLikeExistence(input: LikeInput): Promise<MeLiked[]> {
-	// 	const { memberId, likeRefId } = input;
-	// 	const result = await this.likeModel
-	// 		.findOne({
-	// 			memberId: memberId,
-	// 			likeRefId: likeRefId,
-	// 		})
-	// 		.exec();
-	// 	return result
-	// 		? [
-	// 				{
-	// 					memberId: memberId,
-	// 					likeRefId: likeRefId,
-	// 					myFavorite: true,
-	// 				},
-	// 			]
-	// 		: [];
-	// }
+	public async checkLikeExistence(input: LikeInput): Promise<MeLiked[]> {
+		const { memberId, likeRefId } = input;
+		const result = await this.likeModel
+			.findOne({
+				memberId: memberId,
+				likeRefId: likeRefId,
+			})
+			.exec();
+		return result
+			? [
+					{
+						memberId: memberId,
+						likeRefId: likeRefId,
+						myFavorite: true,
+					},
+				]
+			: [];
+	}
 
-	// // For Favorite Cars
+	// For Favorite Cars
 	// public async getFavoriteCars(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
 	// 	const { page, limit } = input;
 	// 	const match: T = { likeGroup: LikeGroup.CAR, memberId: memberId };

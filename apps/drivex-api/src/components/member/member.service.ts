@@ -60,7 +60,6 @@ export class MemberService {
 		// TODO: Compare passwords
 		const isMatch = await this.authService.comparePasswords(input.memberPassword, response.memberPassword);
 		if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
-		// delete response.memberPassword -> createToken da bu mantiqni yozganmiz
 		response.accessToken = await this.authService.createToken(response);
 		return response;
 	}
@@ -71,52 +70,49 @@ export class MemberService {
 				{
 					_id: memberId,
 					memberStatus: MemberStatus.ACTIVE,
-				}, // FILTER
-				input, // UPDATE
-				{ new: true }, // OPTION
+				},
+				input,
+				{ new: true },
 			)
 			.exec();
 		if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
 
-		// MemberData ni => Token qiberyapti
-		// Bu Login bb kirgandan kn, update->image qilishi uchun shu token bn oberishi muhim
 		result.accessToken = await this.authService.createToken(result);
 		return result;
 	}
 
-	// public async getMember(memberId: ObjectId, targetId: ObjectId): Promise<Member> {
-	// 	const search: T = {
-	// 		_id: targetId,
-	// 		memberStatus: {
-	// 			$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
-	// 		},
-	// 	};
-	// 	const targetMember = await this.memberModel.findOne(search).lean().exec();
-	// 	if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	public async getMember(memberId: ObjectId, targetId: ObjectId): Promise<Member> {
+		const search: T = {
+			_id: targetId,
+			memberStatus: {
+				$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
+			},
+		};
+		const targetMember = await this.memberModel.findOne(search).lean().exec();
+		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-	// 	if (memberId) {
-	// 		// record view -> increase memberView
-	// 		const viewInput: ViewInput = { memberId: memberId, viewRefId: targetId, viewGroup: ViewGroup.MEMBER };
-	// 		const newView = await this.viewService.recordView(viewInput);
-	// 		if (newView) {
-	// 			await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
-	// 			targetMember.memberViews++;
-	// 		}
+		if (memberId) {
+			const viewInput: ViewInput = { memberId: memberId, viewRefId: targetId, viewGroup: ViewGroup.MEMBER };
+			const newView = await this.viewService.recordView(viewInput);
+			if (newView) {
+				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
+				targetMember.memberViews++;
+			}
 
-	// 		// meLiked
-	// 		const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
-	// 		targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
+			// meLiked
+			const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
+			targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
 
-	// 		// meFollowed
-	// 		targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
-	// 	}
-	// 	return targetMember;
-	// }
+			// meFollowed
+			targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
+		}
+		return targetMember;
+	}
 
-	// private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
-	// 	const result = await this.followModel.findOne({ followingId: followingId, followerId: followerId }).exec();
-	// 	return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
-	// }
+	private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
+		const result = await this.followModel.findOne({ followingId: followingId, followerId: followerId }).exec();
+		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
+	}
 
 	// public async getSellers(memberId: ObjectId, input: SellersInquiry): Promise<Members> {
 	// 	const { text } = input.search;
@@ -177,39 +173,39 @@ export class MemberService {
 	// }
 
 	/** ADMIN **/
-	public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
-		const { memberStatus, memberType, text } = input.search;
-		const match: T = {};
-		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+	// public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
+	// 	const { memberStatus, memberType, text } = input.search;
+	// 	const match: T = {};
+	// 	const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
-		if (memberStatus) match.MemberStatus = memberStatus;
-		if (memberType) match.MemberType = memberType;
-		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
-		console.log('match:', match);
+	// 	if (memberStatus) match.MemberStatus = memberStatus;
+	// 	if (memberType) match.MemberType = memberType;
+	// 	if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
+	// 	console.log('match:', match);
 
-		const result = await this.memberModel
-			.aggregate([
-				{ $match: match },
-				{ $sort: sort },
-				{
-					$facet: {
-						list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }],
-						metaCounter: [{ $count: 'total' }],
-					},
-				},
-			])
-			.exec();
-		console.log('result:', result);
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		return result[0];
-	}
+	// 	const result = await this.memberModel
+	// 		.aggregate([
+	// 			{ $match: match },
+	// 			{ $sort: sort },
+	// 			{
+	// 				$facet: {
+	// 					list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }],
+	// 					metaCounter: [{ $count: 'total' }],
+	// 				},
+	// 			},
+	// 		])
+	// 		.exec();
+	// 	console.log('result:', result);
+	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	// 	return result[0];
+	// }
 
-	public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
-		const result: Member = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
-		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+	// public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
+	// 	const result: Member = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
+	// 	if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
-		return result;
-	}
+	// 	return result;
+	// }
 
 	//** Additional Logics **//
 	// public async memberStatsEditor(input: StatisticModifier): Promise<Member> {

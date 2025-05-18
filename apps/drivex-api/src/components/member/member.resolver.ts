@@ -94,21 +94,21 @@ export class MemberResolver {
 	// }
 
 	/** ADMIN **/
-	// @Roles(MemberType.ADMIN)
-	// @UseGuards(RolesGuard)
-	// @Query(() => Members)
-	// public async getAllMembersByAdmin(@Args('input') input: MembersInquiry): Promise<Members> {
-	// 	console.log('Query: getAllMembersByAdmin');
-	// 	return await this.memberService.getAllMembersByAdmin(input);
-	// }
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Query(() => Members)
+	public async getAllMembersByAdmin(@Args('input') input: MembersInquiry): Promise<Members> {
+		console.log('Query: getAllMembersByAdmin');
+		return await this.memberService.getAllMembersByAdmin(input);
+	}
 
-	// @Roles(MemberType.ADMIN)
-	// @UseGuards(RolesGuard)
-	// @Mutation(() => Member)
-	// public async updateMemberByAdmin(@Args('input') input: MemberUpdate): Promise<Member> {
-	// 	console.log('Mutation: updateMemberByAdmin');
-	// 	return await this.memberService.updateMemberByAdmin(input);
-	// }
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Mutation(() => Member)
+	public async updateMemberByAdmin(@Args('input') input: MemberUpdate): Promise<Member> {
+		console.log('Mutation: updateMemberByAdmin');
+		return await this.memberService.updateMemberByAdmin(input);
+	}
 
 	// /** IMAGE UPLOADER **/
 	// @UseGuards(AuthGuard)

@@ -173,39 +173,39 @@ export class MemberService {
 	// }
 
 	/** ADMIN **/
-	// public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
-	// 	const { memberStatus, memberType, text } = input.search;
-	// 	const match: T = {};
-	// 	const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+	public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
+		const { memberStatus, memberType, text } = input.search;
+		const match: T = {};
+		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
-	// 	if (memberStatus) match.MemberStatus = memberStatus;
-	// 	if (memberType) match.MemberType = memberType;
-	// 	if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
-	// 	console.log('match:', match);
+		if (memberStatus) match.MemberStatus = memberStatus;
+		if (memberType) match.MemberType = memberType;
+		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
+		console.log('match:', match);
 
-	// 	const result = await this.memberModel
-	// 		.aggregate([
-	// 			{ $match: match },
-	// 			{ $sort: sort },
-	// 			{
-	// 				$facet: {
-	// 					list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }],
-	// 					metaCounter: [{ $count: 'total' }],
-	// 				},
-	// 			},
-	// 		])
-	// 		.exec();
-	// 	console.log('result:', result);
-	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-	// 	return result[0];
-	// }
+		const result = await this.memberModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
+		console.log('result:', result);
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		return result[0];
+	}
 
-	// public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
-	// 	const result: Member = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
-	// 	if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+	public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
+		const result: Member = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
-	// 	return result;
-	// }
+		return result;
+	}
 
 	//** Additional Logics **//
 	// public async memberStatsEditor(input: StatisticModifier): Promise<Member> {

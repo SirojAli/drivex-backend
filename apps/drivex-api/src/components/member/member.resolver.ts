@@ -72,15 +72,15 @@ export class MemberResolver {
 		return await this.memberService.getMember(memberId, targetId);
 	}
 
-	// @UseGuards(WithoutGuard)
-	// @Query(() => Members)
-	// public async getSellers(
-	// 	@Args('input') input: SellersInquiry,
-	// 	@AuthMember('_id') memberId: ObjectId,
-	// ): Promise<Members> {
-	// 	console.log('Query: getSellers');
-	// 	return await this.memberService.getSellers(memberId, input);
-	// }
+	@UseGuards(WithoutGuard)
+	@Query(() => Members)
+	public async getSellers(
+		@Args('input') input: SellersInquiry,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Members> {
+		console.log('Query: getSellers');
+		return await this.memberService.getSellers(memberId, input);
+	}
 
 	// @UseGuards(AuthGuard)
 	// @Mutation(() => Member)

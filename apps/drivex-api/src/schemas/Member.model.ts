@@ -1,19 +1,12 @@
 import { Schema } from 'mongoose';
 import { MemberType, MemberStatus, MemberAuthType } from '../libs/enums/member.enum';
 
-// Mongoosedan qabul qilingan Schema orqali yangi instance yaratib olamiz: MemberSchema
-// Ichidagi hamma DATASET lar ER Modelingda yozilgan va ular asosida yozilyapti
-
 const MemberSchema = new Schema(
 	{
-		// Bu yerda yozilganlarning barchasi -> DATA SET lar (memberType, memberStatus...)
 		memberType: {
 			type: String,
 			enum: MemberType,
 			default: MemberType.USER,
-			// required: false,
-			// required qo'yilmagan b-a, by-default FALSE qiymatini oladi
-			// shuning chun yozilmaydi !!!
 		},
 
 		memberStatus: {
@@ -30,14 +23,13 @@ const MemberSchema = new Schema(
 
 		memberPhone: {
 			type: String,
-			index: { unique: true, sparse: true }, // phone - unique b-i kk
+			index: { unique: true, sparse: true },
 			required: true,
-			// talab qilinsa: <required: true> ni  yozish shart
 		},
 
 		memberPassword: {
 			type: String,
-			select: false, // ma'nosi: by-default password qiymatini olib bermasin!
+			select: false,
 			required: true,
 		},
 
@@ -49,7 +41,6 @@ const MemberSchema = new Schema(
 
 		memberFullName: {
 			type: String,
-			// bu OPTIONAL bo'lgani uchun, boshqa mantiqlarni yozmaymiz.
 		},
 
 		memberImage: {
@@ -65,8 +56,6 @@ const MemberSchema = new Schema(
 			type: String,
 		},
 
-		// Pastdagi DATA-SET lar default: 0 b-i kk,
-		// sababi bular minus(-) sonlardan boshlanmaydi
 		memberCars: {
 			type: Number,
 			default: 0,
@@ -126,15 +115,7 @@ const MemberSchema = new Schema(
 			type: Date,
 		},
 	},
-	// ER Modelingda yozgan: createdAt va updatedAt real-time da b-i uchun
-	// timestamps: true qilishimiz kk
-	// collection imiz: <members> bo'ladi
 	{ timestamps: true, collection: 'members' },
 );
 
-// <MemberSchema> ni export qil -> boshqa logic larda ishlatish uchun!
 export default MemberSchema;
-
-// QOLGAN SCHEMA MODEL LAR HAM XUDDI SHUNDAY YARATILADI !
-// SO -> QOLGANLARIDA BUNDAY TO'LIQ COMMENTS YOZILMAYDI !
-// KK BO'LSAGINA YOZILADI !

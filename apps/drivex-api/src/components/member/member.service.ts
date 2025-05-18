@@ -115,36 +115,34 @@ export class MemberService {
 		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
 	}
 
-	// public async getSellers(memberId: ObjectId, input: SellersInquiry): Promise<Members> {
-	// 	const { text } = input.search;
-	// 	const match: T = { memberType: MemberType.SELLER, memberStatus: MemberStatus.ACTIVE };
-	// 	const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
-	// 	// const sort: T = { createdAt: -1 }
+	public async getSellers(memberId: ObjectId, input: SellersInquiry): Promise<Members> {
+		const { text } = input.search;
+		const match: T = { memberType: MemberType.SELLER, memberStatus: MemberStatus.ACTIVE };
+		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
-	// 	if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
-	// 	console.log('match:', match);
+		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
+		console.log('match:', match);
 
-	// 	const result = await this.memberModel
-	// 		.aggregate([
-	// 			// 1ta array = 1ta pipeline deyiladi (bo'ladi)
-	// 			{ $match: match },
-	// 			{ $sort: sort },
-	// 			{
-	// 				$facet: {
-	// 					list: [
-	// 						{ $skip: (input.page - 1) * input.limit },
-	// 						{ $limit: input.limit },
-	// 						lookupAuthMemberLiked(memberId), // $_id ni yozmasak ham b-i, bec: by-default shu qiymatni oberadi
-	// 					],
-	// 					metaCounter: [{ $count: 'total' }],
-	// 				},
-	// 			},
-	// 		])
-	// 		.exec();
-	// 	console.log('result:', result);
-	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-	// 	return result[0];
-	// }
+		const result = await this.memberModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						list: [
+							{ $skip: (input.page - 1) * input.limit }, // page
+							{ $limit: input.limit }, // limit
+							lookupAuthMemberLiked(memberId), // like
+						],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
+		console.log('result:', result);
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		return result[0];
+	}
 
 	// public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
 	// 	const target: Member = await this.memberModel

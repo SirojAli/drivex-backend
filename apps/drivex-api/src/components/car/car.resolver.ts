@@ -108,32 +108,32 @@ export class CarResolver {
 	// }
 
 	// /** ADMIN **/
-	// @Roles(MemberType.ADMIN)
-	// @UseGuards(RolesGuard)
-	// @Query((returns) => Cars)
-	// public async getAllCarsByAdmin(
-	// 	@Args('input') input: AllCarsInquiry,
-	// 	@AuthMember('_id') memberId: ObjectId,
-	// ): Promise<Cars> {
-	// 	console.log('Query: getAllCarsByAdmin');
-	// 	return await this.carService.getAllCarsByAdmin(input);
-	// }
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Query((returns) => Cars)
+	public async getAllCarsByAdmin(
+		@Args('input') input: AllCarsInquiry,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Cars> {
+		console.log('Query: getAllCarsByAdmin');
+		return await this.carService.getAllCarsByAdmin(input);
+	}
 
-	// @Roles(MemberType.ADMIN)
-	// @UseGuards(RolesGuard)
-	// @Mutation((returns) => Car)
-	// public async updateCarByAdmin(@Args('input') input: CarUpdate): Promise<Car> {
-	// 	console.log('Mutation: updateCarByAdmin');
-	// 	input._id = shapeIntoMongoObjectId(input._id);
-	// 	return await this.carService.updateCarByAdmin(input);
-	// }
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Mutation((returns) => Car)
+	public async updateCarByAdmin(@Args('input') input: CarUpdate): Promise<Car> {
+		console.log('Mutation: updateCarByAdmin');
+		input._id = shapeIntoMongoObjectId(input._id);
+		return await this.carService.updateCarByAdmin(input);
+	}
 
-	// @Roles(MemberType.ADMIN)
-	// @UseGuards(RolesGuard)
-	// @Mutation((returns) => Car)
-	// public async removeCarByAdmin(@Args('carId') input: string): Promise<Car> {
-	// 	console.log('Mutation: removeCarByAdmin');
-	// 	const carId = shapeIntoMongoObjectId(input);
-	// 	return await this.carService.removeCarByAdmin(carId);
-	// }
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Mutation((returns) => Car)
+	public async removeCarByAdmin(@Args('carId') input: string): Promise<Car> {
+		console.log('Mutation: removeCarByAdmin');
+		const carId = shapeIntoMongoObjectId(input);
+		return await this.carService.removeCarByAdmin(carId);
+	}
 }

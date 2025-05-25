@@ -199,65 +199,65 @@ export class CarService {
 	// }
 
 	// /** ADMIN **/
-	// public async getAllCarsByAdmin(input: AllCarsInquiry): Promise<Cars> {
-	// 	const { carStatus, carLocationList } = input.search;
-	// 	const match: T = {};
-	// 	const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+	public async getAllCarsByAdmin(input: AllCarsInquiry): Promise<Cars> {
+		const { carStatus, carBrandList } = input.search;
+		const match: T = {};
+		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
-	// 	if (carStatus) match.carStatus = carStatus;
-	// 	if (carLocationList) match.carLocationList = { $in: carLocationList };
+		if (carStatus) match.carStatus = carStatus;
+		if (carBrandList) match.carBrandList = { $in: carBrandList };
 
-	// 	const result = await this.carModel
-	// 		.aggregate([
-	// 			{ $match: match },
-	// 			{ $sort: sort },
-	// 			{
-	// 				$facet: {
-	// 					list: [
-	// 						{ $skip: (input.page - 1) * input.limit },
-	// 						{ $limit: input.limit }, // [Car1, Car2]
-	// 						lookupMember, // memberData: [memberDataValue]
-	// 						{ $unwind: '$memberData' },
-	// 					], // memberData: memberDataValue
-	// 					metaCounter: [{ $count: 'total' }],
-	// 				},
-	// 			},
-	// 		])
-	// 		.exec();
-	// 	console.log('result:', result);
-	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-	// 	return result[0];
-	// }
+		const result = await this.carModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						list: [
+							{ $skip: (input.page - 1) * input.limit },
+							{ $limit: input.limit },
+							lookupMember,
+							{ $unwind: '$memberData' },
+						],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
+		console.log('result:', result);
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		return result[0];
+	}
 
-	// public async updateCarByAdmin(input: CarUpdate): Promise<Car> {
-	// 	let { carStatus, soldAt, deletedAt } = input;
-	// 	const search: T = {
-	// 		_id: input._id,
-	// 		carStatus: CarStatus.ACTIVE,
-	// 	};
+	public async updateCarByAdmin(input: CarUpdate): Promise<Car> {
+		let { carStatus, soldAt, deletedAt } = input;
+		const search: T = {
+			_id: input._id,
+			carStatus: CarStatus.ACTIVE,
+		};
 
-	// 	if (carStatus === CarStatus.SOLD) soldAt = moment().toDate();
-	// 	else if (carStatus === CarStatus.DELETE) deletedAt = moment().toDate();
+		if (carStatus === CarStatus.SOLD) soldAt = moment().toDate();
+		else if (carStatus === CarStatus.DELETE) deletedAt = moment().toDate();
 
-	// 	const result = await this.carModel.findOneAndUpdate(search, input, { new: true }).exec();
-	// 	if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+		const result = await this.carModel.findOneAndUpdate(search, input, { new: true }).exec();
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
-	// 	if (soldAt || deletedAt) {
-	// 		await this.memberService.memberStatsEditor({
-	// 			_id: result.memberId,
-	// 			targetKey: 'memberCars',
-	// 			modifier: -1,
-	// 		});
-	// 	}
-	// 	return result;
-	// }
+		if (soldAt || deletedAt) {
+			await this.memberService.memberStatsEditor({
+				_id: result.memberId,
+				targetKey: 'memberCars',
+				modifier: -1,
+			});
+		}
+		return result;
+	}
 
-	// public async removeCarByAdmin(carId: ObjectId): Promise<Car> {
-	// 	const search: T = { _id: carId, carStatus: CarStatus.DELETE };
-	// 	const result = await this.carModel.findOneAndDelete(search).exec();
-	// 	if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
-	// 	return result;
-	// }
+	public async removeCarByAdmin(carId: ObjectId): Promise<Car> {
+		const search: T = { _id: carId, carStatus: CarStatus.DELETE };
+		const result = await this.carModel.findOneAndDelete(search).exec();
+		if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
+		return result;
+	}
 
 	/** Additional Logics **/
 	public async carStatsEditor(input: StatisticModifier): Promise<Car> {

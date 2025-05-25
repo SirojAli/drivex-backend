@@ -46,86 +46,120 @@ export class CarService {
 		}
 	}
 
-	// public async getCar(memberId: ObjectId, carId: ObjectId): Promise<Car> {
-	// 	const search: T = {
-	// 		_id: carId,
-	// 		carStatus: CarStatus.ACTIVE,
-	// 	};
+	public async getCar(memberId: ObjectId, carId: ObjectId): Promise<Car> {
+		const search: T = {
+			_id: carId,
+			carStatus: CarStatus.ACTIVE,
+		};
 
-	// 	const targetCar: Car = await this.carModel.findOne(search).lean().exec();
-	// 	if (!targetCar) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		const targetCar: Car = await this.carModel.findOne(search).lean().exec();
+		if (!targetCar) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-	// 	if (memberId) {
-	// 		const viewInput = { memberId: memberId, viewRefId: carId, viewGroup: ViewGroup.CAR };
-	// 		const newView = await this.viewService.recordView(viewInput);
-	// 		if (newView) {
-	// 			await this.carStatsEditor({ _id: carId, targetKey: 'carViews', modifier: 1 });
-	// 			targetCar.carViews++;
-	// 		}
-	// 		// meLiked
-	// 		const likeInput = { memberId: memberId, likeRefId: carId, likeGroup: LikeGroup.CAR };
-	// 		targetCar.meLiked = await this.likeService.checkLikeExistence(likeInput);
-	// 	}
+		if (memberId) {
+			const viewInput = { memberId: memberId, viewRefId: carId, viewGroup: ViewGroup.CAR };
+			const newView = await this.viewService.recordView(viewInput);
+			if (newView) {
+				await this.carStatsEditor({ _id: carId, targetKey: 'carViews', modifier: 1 });
+				targetCar.carViews++;
+			}
+			// meLiked
+			const likeInput = { memberId: memberId, likeRefId: carId, likeGroup: LikeGroup.CAR };
+			targetCar.meLiked = await this.likeService.checkLikeExistence(likeInput);
+		}
 
-	// 	targetCar.memberData = await this.memberService.getMember(null, targetCar.memberId);
-	// 	return targetCar;
-	// }
+		targetCar.memberData = await this.memberService.getMember(null, targetCar.memberId);
+		return targetCar;
+	}
 
-	// public async updateCar(memberId: ObjectId, input: CarUpdate): Promise<Car> {
-	// 	let { carStatus, soldAt, deletedAt } = input;
-	// 	const search: T = {
-	// 		_id: input._id,
-	// 		memberId: memberId,
-	// 		carStatus: CarStatus.ACTIVE,
-	// 	};
+	public async updateCar(memberId: ObjectId, input: CarUpdate): Promise<Car> {
+		let { carStatus, soldAt, deletedAt } = input;
+		const search: T = {
+			_id: input._id,
+			memberId: memberId,
+			carStatus: CarStatus.ACTIVE,
+		};
 
-	// 	if (carStatus === CarStatus.SOLD) soldAt = moment().toDate();
-	// 	else if (carStatus === CarStatus.DELETE) deletedAt = moment().toDate();
+		if (carStatus === CarStatus.SOLD) soldAt = moment().toDate();
+		else if (carStatus === CarStatus.DELETE) deletedAt = moment().toDate();
 
-	// 	const result = await this.carModel.findOneAndUpdate(search, input, { new: true }).exec();
-	// 	if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+		const result = await this.carModel
+			.findOneAndUpdate(
+				search, // search
+				input, // input
+				{ new: true }, // refresh
+			)
+			.exec();
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
-	// 	if (soldAt || deletedAt) {
-	// 		await this.memberService.memberStatsEditor({
-	// 			_id: memberId,
-	// 			targetKey: 'memberCars',
-	// 			modifier: -1,
-	// 		});
-	// 	}
-	// 	return result;
-	// }
+		if (soldAt || deletedAt) {
+			await this.memberService.memberStatsEditor({
+				_id: memberId,
+				targetKey: 'memberCars',
+				modifier: -1,
+			});
+		}
+		return result;
+	}
 
-	// public async getCars(memberId: ObjectId, input: CarsInquiry): Promise<Cars> {
-	// 	const match: T = { carStatus: CarStatus.ACTIVE };
-	// 	const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+	public async getCars(memberId: ObjectId, input: CarsInquiry): Promise<Cars> {
+		const match: T = { carStatus: CarStatus.ACTIVE };
+		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+		this.shapeMatchQuery(match, input);
+		console.log('match:', match);
 
-	// 	this.shapeMatchQuery(match, input);
-	// 	console.log('match:', match);
+		const result = await this.carModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						list: [
+							{ $skip: (input.page - 1) * input.limit },
+							{ $limit: input.limit },
+							lookupAuthMemberLiked(memberId),
+							lookupMember,
+							{ $unwind: '$memberData' },
+						],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
+		console.log('result:', result);
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		return result[0];
+	}
 
-	// 	const result = await this.carModel
-	// 		.aggregate([
-	// 			{ $match: match },
-	// 			{ $sort: sort },
-	// 			{
-	// 				$facet: {
-	// 					// PipeLine 1
-	// 					list: [
-	// 						{ $skip: (input.page - 1) * input.limit },
-	// 						{ $limit: input.limit },
-	// 						// meLiked
-	// 						lookupAuthMemberLiked(memberId),
-	// 						lookupMember,
-	// 						{ $unwind: '$memberData' },
-	// 					],
-	// 					metaCounter: [{ $count: 'total' }],
-	// 				},
-	// 			},
-	// 		])
-	// 		.exec();
-	// 	console.log('result:', result);
-	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-	// 	return result[0];
-	// }
+	public async getSellerCars(memberId: ObjectId, input: SellerCarsInquiry): Promise<Cars> {
+		const { carStatus } = input.search;
+		if (carStatus === CarStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
+
+		const match: T = {
+			memberId: memberId,
+			carStatus: carStatus ?? { $ne: CarStatus.DELETE },
+		};
+		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+		const result = await this.carModel
+			.aggregate([
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						list: [
+							{ $skip: (input.page - 1) * input.limit },
+							{ $limit: input.limit },
+							lookupMember,
+							{ $unwind: '$memberData' },
+						],
+						metaCounter: [{ $count: 'total' }],
+					},
+				},
+			])
+			.exec();
+		console.log('result:', result);
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		return result[0];
+	}
 
 	// // For Favorite Cars
 	// public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
@@ -135,38 +169,6 @@ export class CarService {
 	// // For Visited Cars
 	// public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
 	// 	return await this.viewService.getVisitedCars(memberId, input);
-	// }
-
-	// public async getSellerCars(memberId: ObjectId, input: SellerCarsInquiry): Promise<Cars> {
-	// 	const { carStatus } = input.search;
-	// 	if (carStatus === CarStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
-
-	// 	const match: T = {
-	// 		memberId: memberId,
-	// 		carStatus: carStatus ?? { $ne: CarStatus.DELETE },
-	// 	};
-	// 	const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
-
-	// 	const result = await this.carModel
-	// 		.aggregate([
-	// 			{ $match: match },
-	// 			{ $sort: sort },
-	// 			{
-	// 				$facet: {
-	// 					list: [
-	// 						{ $skip: (input.page - 1) * input.limit },
-	// 						{ $limit: input.limit },
-	// 						lookupMember,
-	// 						{ $unwind: '$memberData' },
-	// 					],
-	// 					metaCounter: [{ $count: 'total' }],
-	// 				},
-	// 			},
-	// 		])
-	// 		.exec();
-	// 	console.log('result:', result);
-	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-	// 	return result[0];
 	// }
 
 	// public async likeTargetCar(memberId: ObjectId, likeRefId: ObjectId): Promise<Car> {
@@ -257,44 +259,51 @@ export class CarService {
 	// 	return result;
 	// }
 
-	// /** Additional Logics **/
-	// public async carStatsEditor(input: StatisticModifier): Promise<Car> {
-	// 	console.log('executed');
-	// 	const { _id, targetKey, modifier } = input;
-	// 	return await this.carModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
-	// }
+	/** Additional Logics **/
+	public async carStatsEditor(input: StatisticModifier): Promise<Car> {
+		console.log('executed');
+		const { _id, targetKey, modifier } = input;
+		return await this.carModel
+			.findByIdAndUpdate(
+				_id, // id
+				{ $inc: { [targetKey]: modifier } }, // increase
+				{ new: true }, // refresh
+			)
+			.exec();
+	}
 
-	// private shapeMatchQuery(match: T, input: CarsInquiry): void {
-	// 	const {
-	// 		memberId,
-	// 		locationList,
-	// 		roomsList,
-	// 		bedsList,
-	// 		typeList,
-	// 		periodsRange,
-	// 		pricesRange,
-	// 		squaresRange,
-	// 		options,
-	// 		text,
-	// 	} = input.search;
+	private shapeMatchQuery(match: T, input: CarsInquiry): void {
+		const { memberId, brandList, typeList, fuelList, transmissionList, colorList, pricesRange, yearRange, text } =
+			input.search;
 
-	// 	if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-	// 	if (locationList) match.carLocation = { $in: locationList };
-	// 	if (roomsList) match.carRooms = { $in: roomsList };
-	// 	if (bedsList) match.carBeds = { $in: bedsList };
-	// 	if (typeList) match.carType = { $in: typeList };
+		if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
+		if (brandList) match.carBrand = { $in: brandList };
+		if (typeList) match.carType = { $in: typeList };
+		if (fuelList) match.carFuelType = { $in: fuelList };
+		if (transmissionList) match.carTransmission = { $in: transmissionList };
+		if (colorList) match.carColor = { $in: colorList };
 
-	// 	if (pricesRange) match.carPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
-	// 	if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
-	// 	if (squaresRange) match.carSquare = { $gte: squaresRange.start, $lte: squaresRange.end };
+		if (pricesRange) match.carPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
+		if (yearRange) match.createdAt = { $gte: yearRange.start, $lte: yearRange.end };
 
-	// 	if (text) match.carTitle = { $regex: new RegExp(text, 'i') };
-	// 	if (options) {
-	// 		match['$or'] = options.map((ele) => {
-	// 			return { [ele]: true };
-	// 		});
-	// 	}
-	// }
+		if (text) {
+			const words = text.trim().split(/\s+/);
+
+			match.$and = words.map((word) => ({
+				$or: [
+					{ carBrand: { $regex: new RegExp(word, 'i') } }, // car-brand
+					{ carModel: { $regex: new RegExp(word, 'i') } }, // car-model
+				],
+			}));
+		}
+
+		// if (text) {
+		// 	match.$or = [
+		// 		{ carBrand: { $regex: new RegExp(text, 'i') } }, // car-brand
+		// 		{ carModel: { $regex: new RegExp(text, 'i') } }, // car-model
+		// 	];
+		// }
+	}
 }
 
 // INPUT GA KIRITILADIGAN:

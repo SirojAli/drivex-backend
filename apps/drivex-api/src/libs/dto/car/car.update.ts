@@ -10,10 +10,6 @@ export class CarUpdate {
 	_id: ObjectId;
 
 	@IsOptional()
-	@Field(() => CarType, { nullable: true })
-	carType?: CarType;
-
-	@IsOptional()
 	@Field(() => CarStatus, { nullable: true })
 	carStatus?: CarStatus;
 
@@ -22,9 +18,13 @@ export class CarUpdate {
 	carBrand?: CarBrand;
 
 	@IsOptional()
-	@Length(1, 100)
+	@Length(1, 50)
 	@Field(() => String, { nullable: true })
 	carModel?: string;
+
+	@IsOptional()
+	@Field(() => CarType, { nullable: true })
+	carType?: CarType;
 
 	@IsOptional()
 	@Field(() => Number, { nullable: true })

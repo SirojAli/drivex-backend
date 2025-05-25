@@ -1,5 +1,5 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
+import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min, Max } from 'class-validator';
 import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarColor } from '../../enums/car.enum';
 import { ObjectId } from 'mongoose';
 import { availableCarSorts } from '../../config';
@@ -57,9 +57,11 @@ export class CarInput {
 @InputType()
 export class YearRange {
 	@Field(() => Int)
+	@Min(2000)
 	start: number;
 
 	@Field(() => Int)
+	@Max(2025)
 	end: number;
 }
 
@@ -80,12 +82,12 @@ class CISearch {
 	memberId?: ObjectId;
 
 	@IsOptional()
-	@Field(() => [CarType], { nullable: true })
-	typeList?: CarType[];
-
-	@IsOptional()
 	@Field(() => [CarBrand], { nullable: true })
 	brandList?: CarBrand[];
+
+	@IsOptional()
+	@Field(() => [CarType], { nullable: true })
+	typeList?: CarType[];
 
 	@IsOptional()
 	@Field(() => [CarFuelType], { nullable: true })

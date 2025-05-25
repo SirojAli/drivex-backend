@@ -76,7 +76,7 @@ export class PricesRange {
 
 // 3. SEARCH FILTERS  (Car Inquiry Search)
 @InputType()
-class CISearch {
+class CarISearch {
 	@IsOptional()
 	@Field(() => String, { nullable: true })
 	memberId?: ObjectId;
@@ -138,13 +138,13 @@ export class CarsInquiry {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() => CISearch)
-	search: CISearch;
+	@Field(() => CarISearch)
+	search: CarISearch;
 }
 
 // 5. SELLER CARS INQUIRY
 @InputType()
-class SPISearch {
+class SCISearch {
 	@IsOptional()
 	@Field(() => CarStatus, { nullable: true })
 	carStatus?: CarStatus;
@@ -172,8 +172,8 @@ export class SellerCarsInquiry {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() => SPISearch)
-	search: SPISearch;
+	@Field(() => SCISearch)
+	search: SCISearch;
 }
 
 // 6. ALL CARS INQUIRY

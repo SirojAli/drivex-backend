@@ -28,7 +28,7 @@ export class CarResolver {
 	@UseGuards(RolesGuard)
 	@Mutation(() => Car)
 	public async createCar(
-		@Args('input') input: CarInput, // InputType
+		@Args('input') input: CarInput, //
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Car> {
 		console.log('Mutation: createCar');
@@ -39,7 +39,7 @@ export class CarResolver {
 	@UseGuards(WithoutGuard)
 	@Query((returns) => Car)
 	public async getCar(
-		@Args('carId') input: string, // car-id
+		@Args('carId') input: string, //
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Car> {
 		console.log('Query: getCar');
@@ -51,7 +51,7 @@ export class CarResolver {
 	@UseGuards(RolesGuard)
 	@Mutation((returns) => Car)
 	public async updateCar(
-		@Args('input') input: CarUpdate, // input
+		@Args('input') input: CarUpdate, //
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Car> {
 		console.log('Mutation: updateCar');
@@ -62,7 +62,7 @@ export class CarResolver {
 	@UseGuards(WithoutGuard)
 	@Query((returns) => Cars)
 	public async getCars(
-		@Args('input') input: CarsInquiry, // car-input
+		@Args('input') input: CarsInquiry, //
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Cars> {
 		console.log('Query: getCars');
@@ -102,8 +102,8 @@ export class CarResolver {
 	@UseGuards(AuthGuard)
 	@Mutation(() => Car)
 	public async likeTargetCar(
-		@Args('carId') input: string, // car-id
-		@AuthMember('_id') memberId: ObjectId, //member-id
+		@Args('carId') input: string, //
+		@AuthMember('_id') memberId: ObjectId, //
 	): Promise<Car> {
 		console.log('Mutation: likeTargetCar');
 		const likeRefId = shapeIntoMongoObjectId(input);

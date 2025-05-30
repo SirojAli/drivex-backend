@@ -29,12 +29,10 @@ export class MemberService {
 	) {}
 
 	public async signup(input: MemberInput): Promise<Member> {
-		//  Hashing Password
 		input.memberPassword = await this.authService.hashPassword(input.memberPassword);
 		try {
 			const result = await this.memberModel.create(input);
 
-			// Authentication via Token
 			result.accessToken = await this.authService.createToken(result);
 			// console.log('accessToken', accessToken);
 			return result;
@@ -57,8 +55,7 @@ export class MemberService {
 			throw new InternalServerErrorException(Message.BLOCKED_USER);
 		}
 
-		// TODO: Compare passwords
-		const isMatch = await this.authService // match/no-match
+		const isMatch = await this.authService //
 			.comparePasswords(input.memberPassword, response.memberPassword);
 		if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
 		response.accessToken = await this.authService.createToken(response);
@@ -92,7 +89,6 @@ export class MemberService {
 		const targetMember = await this.memberModel.findOne(search).lean().exec();
 		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-		// increase memberView (recordView)
 		if (memberId) {
 			const viewInput: ViewInput = { memberId: memberId, viewRefId: targetId, viewGroup: ViewGroup.MEMBER };
 			const newView = await this.viewService.recordView(viewInput);
@@ -111,19 +107,6 @@ export class MemberService {
 		return targetMember;
 	}
 
-	private async checkSubscription(
-		followerId: ObjectId, // follower-id
-		followingId: ObjectId, // following-id
-	): Promise<MeFollowed[]> {
-		const result = await this.followModel
-			.findOne({
-				followingId: followingId, // follower-id
-				followerId: followerId,
-			}) // following-id
-			.exec();
-		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
-	}
-
 	public async getSellers(memberId: ObjectId, input: SellersInquiry): Promise<Members> {
 		const { text } = input.search;
 		const match: T = { memberType: MemberType.SELLER, memberStatus: MemberStatus.ACTIVE };
@@ -139,9 +122,9 @@ export class MemberService {
 				{
 					$facet: {
 						list: [
-							{ $skip: (input.page - 1) * input.limit }, // page
-							{ $limit: input.limit }, // limit
-							lookupAuthMemberLiked(memberId), // like
+							{ $skip: (input.page - 1) * input.limit }, //
+							{ $limit: input.limit }, //
+							lookupAuthMemberLiked(memberId), //
 						],
 						metaCounter: [{ $count: 'total' }],
 					},
@@ -210,9 +193,9 @@ export class MemberService {
 	public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
 		const result: Member = await this.memberModel
 			.findOneAndUpdate(
-				{ _id: input._id }, // id
-				input, // input
-				{ new: true }, // refresh
+				{ _id: input._id }, //
+				input, //
+				{ new: true }, //
 			)
 			.exec();
 
@@ -226,10 +209,23 @@ export class MemberService {
 		const { _id, targetKey, modifier } = input;
 		return await this.memberModel
 			.findByIdAndUpdate(
-				_id, // id
-				{ $inc: { [targetKey]: modifier } }, // increase
-				{ new: true }, // refresh
+				_id, //
+				{ $inc: { [targetKey]: modifier } }, //
+				{ new: true }, //
 			)
 			.exec();
+	}
+
+	private async checkSubscription(
+		followerId: ObjectId, //
+		followingId: ObjectId,
+	): Promise<MeFollowed[]> {
+		const result = await this.followModel
+			.findOne({
+				followingId: followingId, //
+				followerId: followerId,
+			})
+			.exec();
+		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
 	}
 }

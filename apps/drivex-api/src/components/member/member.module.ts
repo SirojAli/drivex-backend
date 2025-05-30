@@ -10,9 +10,6 @@ import FollowSchema from '../../schemas/Follow.model';
 
 @Module({
 	imports: [
-		// <Member> Schema Modelini chaqirib olamiz (MongooseModule yordamida)
-		// Nega MongooseModule? -> Database Connectionni aynan u orqali hosil qilgandik.
-		//
 		MongooseModule.forFeature([{ name: 'Member', schema: MemberSchema }]),
 		MongooseModule.forFeature([{ name: 'Follow', schema: FollowSchema }]),
 		AuthModule,

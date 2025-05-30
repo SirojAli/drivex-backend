@@ -84,9 +84,9 @@ export class CarService {
 
 		const result = await this.carModel
 			.findOneAndUpdate(
-				search, // search
-				input, // input
-				{ new: true }, // refresh
+				search, //
+				input, //
+				{ new: true }, //
 			)
 			.exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
@@ -264,9 +264,9 @@ export class CarService {
 		const { _id, targetKey, modifier } = input;
 		return await this.carModel
 			.findByIdAndUpdate(
-				_id, // id
-				{ $inc: { [targetKey]: modifier } }, // increase
-				{ new: true }, // refresh
+				_id, //
+				{ $inc: { [targetKey]: modifier } }, //
+				{ new: true }, //
 			)
 			.exec();
 	}
@@ -290,8 +290,8 @@ export class CarService {
 
 			match.$and = words.map((word) => ({
 				$or: [
-					{ carBrand: { $regex: new RegExp(word, 'i') } }, // car-brand
-					{ carModel: { $regex: new RegExp(word, 'i') } }, // car-model
+					{ carBrand: { $regex: new RegExp(word, 'i') } }, //
+					{ carModel: { $regex: new RegExp(word, 'i') } }, //
 				],
 			}));
 		}

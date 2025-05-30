@@ -79,7 +79,7 @@ export const lookupFollowingData = {
 	},
 };
 
-/** Followers Process  */
+/** Follower Process  */
 export const lookupFollowerData = {
 	$lookup: {
 		from: 'members',

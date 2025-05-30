@@ -85,16 +85,16 @@ export class MemberResolver {
 		return await this.memberService.getSellers(memberId, input);
 	}
 
-	// @UseGuards(AuthGuard)
-	// @Mutation(() => Member)
-	// public async likeTargetMember(
-	// 	@Args('memberId') input: string,
-	// 	@AuthMember('_id') memberId: ObjectId,
-	// ): Promise<Member> {
-	// 	console.log('Mutation: likeTargetMember');
-	// 	const likeRefId = shapeIntoMongoObjectId(input);
-	// 	return await this.memberService.likeTargetMember(memberId, likeRefId);
-	// }
+	@UseGuards(AuthGuard)
+	@Mutation(() => Member)
+	public async likeTargetMember(
+		@Args('memberId') input: string,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Member> {
+		console.log('Mutation: likeTargetMember');
+		const likeRefId = shapeIntoMongoObjectId(input);
+		return await this.memberService.likeTargetMember(memberId, likeRefId);
+	}
 
 	/** ADMIN **/
 	@Roles(MemberType.ADMIN)

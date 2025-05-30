@@ -124,32 +124,31 @@ export class BoardArticleService {
 		return result[0];
 	}
 
-	// public async likeTargetBoardArticle(memberId: ObjectId, likeRefId: ObjectId): Promise<BoardArticle> {
-	// 	const target: BoardArticle = await this.boardArticleModel
-	// 		.findOne({
-	// 			_id: likeRefId,
-	// 			articleStatus: BoardArticleStatus.ACTIVE,
-	// 		})
-	// 		.exec();
-	// 	if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	public async likeTargetBoardArticle(memberId: ObjectId, likeRefId: ObjectId): Promise<BoardArticle> {
+		const target: BoardArticle = await this.boardArticleModel
+			.findOne({
+				_id: likeRefId,
+				articleStatus: BoardArticleStatus.ACTIVE,
+			})
+			.exec();
+		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-	// 	const input: LikeInput = {
-	// 		memberId: memberId,
-	// 		likeRefId: likeRefId,
-	// 		likeGroup: LikeGroup.ARTICLE,
-	// 	};
+		const input: LikeInput = {
+			memberId: memberId,
+			likeRefId: likeRefId,
+			likeGroup: LikeGroup.ARTICLE,
+		};
 
-	// 	// LIKE TOGGLE via Like Modules   (like: -1 or +1)
-	// 	const modifier: number = await this.likeService.toggleLike(input);
-	// 	const result = await this.boardArticleStatsEditor({
-	// 		_id: likeRefId,
-	// 		targetKey: 'articleLikes',
-	// 		modifier: modifier,
-	// 	});
+		const modifier: number = await this.likeService.toggleLike(input);
+		const result = await this.boardArticleStatsEditor({
+			_id: likeRefId,
+			targetKey: 'articleLikes',
+			modifier: modifier,
+		});
 
-	// 	if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
-	// 	return result;
-	// }
+		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
+		return result;
+	}
 
 	//** ADMIN **//
 	public async getAllBoardArticlesByAdmin(input: AllBoardArticlesInquiry): Promise<BoardArticles> {

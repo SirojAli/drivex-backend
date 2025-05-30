@@ -171,32 +171,31 @@ export class CarService {
 	// 	return await this.viewService.getVisitedCars(memberId, input);
 	// }
 
-	// public async likeTargetCar(memberId: ObjectId, likeRefId: ObjectId): Promise<Car> {
-	// 	const target: Car = await this.carModel
-	// 		.findOne({
-	// 			_id: likeRefId,
-	// 			carStatus: CarStatus.ACTIVE,
-	// 		})
-	// 		.exec();
-	// 	if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	public async likeTargetCar(memberId: ObjectId, likeRefId: ObjectId): Promise<Car> {
+		const target: Car = await this.carModel
+			.findOne({
+				_id: likeRefId,
+				carStatus: CarStatus.ACTIVE,
+			})
+			.exec();
+		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-	// 	const input: LikeInput = {
-	// 		memberId: memberId,
-	// 		likeRefId: likeRefId,
-	// 		likeGroup: LikeGroup.CAR,
-	// 	};
+		const input: LikeInput = {
+			memberId: memberId,
+			likeRefId: likeRefId,
+			likeGroup: LikeGroup.CAR,
+		};
 
-	// 	// LIKE TOGGLE via Like Modules   (like: -1 or +1)
-	// 	const modifier: number = await this.likeService.toggleLike(input);
-	// 	const result = await this.carStatsEditor({
-	// 		_id: likeRefId,
-	// 		targetKey: 'carLikes',
-	// 		modifier: modifier,
-	// 	});
+		const modifier: number = await this.likeService.toggleLike(input);
+		const result = await this.carStatsEditor({
+			_id: likeRefId,
+			targetKey: 'carLikes',
+			modifier: modifier,
+		});
 
-	// 	if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
-	// 	return result;
-	// }
+		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
+		return result;
+	}
 
 	// /** ADMIN **/
 	public async getAllCarsByAdmin(input: AllCarsInquiry): Promise<Cars> {

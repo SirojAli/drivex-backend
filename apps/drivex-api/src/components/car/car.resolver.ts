@@ -99,13 +99,16 @@ export class CarResolver {
 	// 	return await this.carService.getVisited(memberId, input);
 	// }
 
-	// @UseGuards(AuthGuard)
-	// @Mutation(() => Car)
-	// public async likeTargetCar(@Args('carId') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Car> {
-	// 	console.log('Mutation: likeTargetCar');
-	// 	const likeRefId = shapeIntoMongoObjectId(input);
-	// 	return await this.carService.likeTargetCar(memberId, likeRefId);
-	// }
+	@UseGuards(AuthGuard)
+	@Mutation(() => Car)
+	public async likeTargetCar(
+		@Args('carId') input: string, // car-id
+		@AuthMember('_id') memberId: ObjectId, //member-id
+	): Promise<Car> {
+		console.log('Mutation: likeTargetCar');
+		const likeRefId = shapeIntoMongoObjectId(input);
+		return await this.carService.likeTargetCar(memberId, likeRefId);
+	}
 
 	// /** ADMIN **/
 	@Roles(MemberType.ADMIN)

@@ -34,7 +34,7 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
 		$lookup: {
 			from: 'likes',
 			let: {
-				localRefId: targetRefId, // '$_id'
+				localRefId: targetRefId,
 				localMemberId: memberId,
 				localMyFavorite: true,
 			},
@@ -42,7 +42,10 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
 				{
 					$match: {
 						$expr: {
-							$and: [{ $eq: ['$likeRefId', '$$localRefId'] }, { $eq: ['$memberId', '$$localMemberId'] }],
+							$and: [
+								{ $eq: ['$likeRefId', '$$localRefId'] }, //
+								{ $eq: ['$memberId', '$$localMemberId'] },
+							],
 						},
 					},
 				},
@@ -94,6 +97,7 @@ interface LookupAuthMemberFollowed {
 	followerId: T;
 	followingId: string;
 }
+
 export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => {
 	const { followerId, followingId } = input;
 	return {
@@ -108,7 +112,10 @@ export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => {
 				{
 					$match: {
 						$expr: {
-							$and: [{ $eq: ['$followerId', '$$localFollowerId'] }, { $eq: ['$followingId', '$$localFollowingId'] }],
+							$and: [
+								{ $eq: ['$followerId', '$$localFollowerId'] }, //
+								{ $eq: ['$followingId', '$$localFollowingId'] },
+							],
 						},
 					},
 				},

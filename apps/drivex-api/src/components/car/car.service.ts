@@ -161,15 +161,15 @@ export class CarService {
 		return result[0];
 	}
 
-	// // For Favorite Cars
-	// public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
-	// 	return await this.likeService.getFavoriteCars(memberId, input);
-	// }
+	// For Favorite Cars
+	public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
+		return await this.likeService.getFavoriteCars(memberId, input);
+	}
 
-	// // For Visited Cars
-	// public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
-	// 	return await this.viewService.getVisitedCars(memberId, input);
-	// }
+	// For Visited Cars
+	public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Cars> {
+		return await this.viewService.getVisitedCars(memberId, input);
+	}
 
 	public async likeTargetCar(memberId: ObjectId, likeRefId: ObjectId): Promise<Car> {
 		const target: Car = await this.carModel

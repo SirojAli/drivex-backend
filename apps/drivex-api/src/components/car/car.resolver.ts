@@ -80,24 +80,27 @@ export class CarResolver {
 		return await this.carService.getSellerCars(memberId, input);
 	}
 
-	// // Get Favorite Properies
-	// @UseGuards(AuthGuard)
-	// @Query((returns) => Cars)
-	// public async getFavorites(
-	// 	@Args('input') input: OrdinaryInquiry,
-	// 	@AuthMember('_id') memberId: ObjectId,
-	// ): Promise<Cars> {
-	// 	console.log('Query: getFavorites');
-	// 	return await this.carService.getFavorites(memberId, input);
-	// }
+	// Get Favorite Properies
+	@UseGuards(AuthGuard)
+	@Query((returns) => Cars)
+	public async getFavorites(
+		@Args('input') input: OrdinaryInquiry,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Cars> {
+		console.log('Query: getFavorites');
+		return await this.carService.getFavorites(memberId, input);
+	}
 
-	// // Get Visited Cars
-	// @UseGuards(AuthGuard)
-	// @Query((returns) => Cars)
-	// public async getVisited(@Args('input') input: OrdinaryInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Cars> {
-	// 	console.log('Query: getVisited');
-	// 	return await this.carService.getVisited(memberId, input);
-	// }
+	// Get Visited Cars
+	@UseGuards(AuthGuard)
+	@Query((returns) => Cars)
+	public async getVisited(
+		@Args('input') input: OrdinaryInquiry, //
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Cars> {
+		console.log('Query: getVisited');
+		return await this.carService.getVisited(memberId, input);
+	}
 
 	@UseGuards(AuthGuard)
 	@Mutation(() => Car)

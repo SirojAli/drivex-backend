@@ -57,9 +57,9 @@ export class ViewService {
 				},
 			])
 			.exec();
+
 		// console.log('data:', data);
 		const result: Cars = { list: [], metaCounter: data[0].metaCounter };
-
 		result.list = data[0].list.map((ele) => ele.visitedCar);
 		console.log('result:', result);
 		return result;

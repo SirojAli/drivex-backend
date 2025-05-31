@@ -91,7 +91,7 @@ export class LikeService {
 		const result: Cars = { list: [], metaCounter: data[0].metaCounter };
 
 		result.list = data[0].list.map((ele) => ele.favoriteCar);
-		console.log('result:', result);
+		console.log('result: ', result);
 		return result;
 	}
 }

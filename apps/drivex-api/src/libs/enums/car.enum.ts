@@ -20,6 +20,11 @@ export enum CarBrand {
 	PORSCHE = 'PORSCHE',
 	TESLA = 'TESLA',
 	BYD = 'BYD',
+	LEXUS = 'LEXUS',
+	ROLLS_ROYCE = 'ROLLS_ROYCE',
+	FERRARI = 'FERRARI',
+	LAMBORGHINI = 'LAMBORGHINI',
+	BUGATTI = 'BUGATTI',
 }
 registerEnumType(CarBrand, {
 	name: 'CarBrand',

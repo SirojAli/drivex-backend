@@ -5,7 +5,7 @@ import { T } from './types/common';
 
 /** Seller related **/
 export const availableSellerSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank'];
-export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews'];
+export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank'];
 
 /** Car related **/
 export const availableCarSorts = ['createdAt', 'updatedAt', 'carLikes', 'carViews', 'carRank', 'carPrice'];

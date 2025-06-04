@@ -2,8 +2,11 @@ import { registerEnumType } from '@nestjs/graphql';
 
 export enum BoardArticleCategory {
 	NEWS = 'NEWS',
-	STORY = 'STORY',
-	GENERAL = 'GENERAL',
+	REVIEWS = 'REVIEWS ',
+	EVENT = 'EVENT',
+	GUIDE = 'GUIDE ',
+	PROMOTION = 'PROMOTION',
+	ANNOUNCEMENT = 'ANNOUNCEMENT ',
 }
 registerEnumType(BoardArticleCategory, {
 	name: 'BoardArticleCategory',

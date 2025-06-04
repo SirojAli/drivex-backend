@@ -1,12 +1,12 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum CarType {
-	SEDAN = 'SEDAN',
-	SUV = 'SUV',
-	TRUCK = 'TRUCK',
+export enum CarStatus {
+	ACTIVE = 'ACTIVE',
+	SOLD = 'SOLD',
+	DELETE = 'DELETE',
 }
-registerEnumType(CarType, {
-	name: 'CarType',
+registerEnumType(CarStatus, {
+	name: 'CarStatus',
 });
 
 export enum CarBrand {
@@ -25,43 +25,56 @@ registerEnumType(CarBrand, {
 	name: 'CarBrand',
 });
 
-export enum CarStatus {
-	ACTIVE = 'ACTIVE',
-	SOLD = 'SOLD',
-	DELETE = 'DELETE',
+export enum CarType {
+	SEDAN = 'SEDAN',
+	SUV = 'SUV',
+	TRUCK = 'TRUCK',
+	COUPE = 'COUPE',
+	CONVERTIBLE = 'CONVERTIBLE',
+	HATCHBACK = 'HATCHBACK',
+	MINIVAN = 'MINIVAN',
+	PICKUP = 'PICKUP',
+	CROSSOVER = 'CROSSOVER',
+	WAGON = 'WAGON',
+	MPV = 'MPV', // Multi-Purpose Vehicle
 }
-registerEnumType(CarStatus, {
-	name: 'CarStatus',
+registerEnumType(CarType, {
+	name: 'CarType',
 });
 
 export enum CarFuelType {
 	PETROL = 'PETROL',
 	ELECTRIC = 'ELECTRIC',
 	HYBRID = 'HYBRID',
-	// LPG = 'LPG'
-	// DIESEL = 'DIESEL'
+	LPG = 'LPG',
+	DIESEL = 'DIESEL',
 }
 registerEnumType(CarFuelType, {
 	name: 'CarFuelType',
 });
 
 export enum CarTransmission {
-	AUTO = 'AUTO',
 	MANUAL = 'MANUAL',
+	AUTO = 'AUTO',
+	SEMI_AUTO = 'SEMI_AUTO',
 }
 registerEnumType(CarTransmission, {
 	name: 'CarTransmission',
 });
 
 export enum CarColor {
-	WHITE = 'WHITE ',
-	BLACK = 'BLACK ',
-	GRAY = 'GRAY ',
-	RED = 'RED ',
-	BLUE = 'BLUE ',
-	SILVER = 'SILVER ',
-	// GREEN = 'GREEN',
-	// ORANGE = 'ORANGE',
+	BLACK = 'BLACK',
+	WHITE = 'WHITE',
+	SILVER = 'SILVER',
+	GREY = 'GREY',
+	BLUE = 'BLUE',
+	RED = 'RED',
+	GREEN = 'GREEN',
+	YELLOW = 'YELLOW',
+	ORANGE = 'ORANGE',
+	BROWN = 'BROWN',
+	GOLD = 'GOLD',
+	PURPLE = 'PURPLE',
 }
 registerEnumType(CarColor, {
 	name: 'CarColor',

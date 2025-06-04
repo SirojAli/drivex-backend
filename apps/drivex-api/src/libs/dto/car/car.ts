@@ -13,28 +13,28 @@ export class Car {
 	carStatus: CarStatus;
 
 	@Field(() => CarBrand)
-	carBrand: CarBrand; // e.g. "Hyundai"
+	carBrand: CarBrand;
 
 	@Field(() => String)
-	carModel: string; // e.g. "Sonata"
+	carModel: string;
 
 	@Field(() => CarType)
-	carType: CarType; // e.g. "Sedan"
+	carType: CarType;
 
 	@Field(() => Number)
-	carYear: number; // e.g. "2022"
+	carYear: number;
 
 	@Field(() => Number)
-	carPrice: number; // e.g. "44000"
+	carPrice: number;
 
 	@Field(() => CarFuelType)
-	carFuelType: CarFuelType; // e.g. "Petrol"
+	carFuelType: CarFuelType;
 
 	@Field(() => CarTransmission)
-	carTransmission: CarTransmission; // e.g. "Auto"
+	carTransmission: CarTransmission;
 
 	@Field(() => CarColor)
-	carColor: CarColor; // e.g. "Black"
+	carColor: CarColor;
 
 	@Field(() => [String])
 	carImages: string[];

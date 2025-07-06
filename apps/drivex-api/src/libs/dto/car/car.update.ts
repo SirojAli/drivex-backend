@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsIn, IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import { CarBrand, CarColor, CarFuelType, CarStatus, CarTransmission, CarType } from '../../enums/car.enum';
+import { IsBoolean, IsIn, IsInt, IsNotEmpty, IsOptional, Length, Matches, Min } from 'class-validator';
+import { CarBrand, CarDriveType, CarFuelType, CarStatus, CarTransmission, CarType } from '../../enums/car.enum';
 import { ObjectId } from 'mongoose';
 
 @InputType()
@@ -44,8 +44,8 @@ export class CarUpdate {
 	carTransmission?: CarTransmission;
 
 	@IsOptional()
-	@Field(() => CarColor, { nullable: true })
-	carColor?: CarColor;
+	@Field(() => String, { nullable: true })
+	carColor?: string;
 
 	@IsOptional()
 	@Field(() => [String], { nullable: true })
@@ -55,6 +55,55 @@ export class CarUpdate {
 	@Length(5, 500)
 	@Field(() => String, { nullable: true })
 	carDescription?: string;
+
+	@IsOptional()
+	@Matches(/^[A-HJ-NPR-Z0-9]{17}$/, { message: 'Invalid VIN format' })
+	@Field(() => String, { nullable: true })
+	carVinNumber?: string;
+
+	@IsOptional()
+	@IsBoolean()
+	@Field(() => Boolean, { nullable: true })
+	carIsNew?: boolean;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	@Min(0)
+	carEngineSize?: number;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	@Min(0)
+	carMaxSpeed?: number;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	@Min(1)
+	carSeats?: number;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	@Min(1)
+	carDoors?: number;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	@Min(0)
+	carCityMpg?: number;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	@Min(0)
+	carHighwayMpg?: number;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	@Min(1)
+	carCylinders?: number;
+
+	@IsOptional()
+	@Field(() => [CarDriveType], { nullable: true })
+	carDriveTypes?: CarDriveType[];
 
 	soldAt?: Date;
 

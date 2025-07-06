@@ -272,8 +272,18 @@ export class CarService {
 	}
 
 	private shapeMatchQuery(match: T, input: CarsInquiry): void {
-		const { memberId, brandList, typeList, fuelList, transmissionList, colorList, pricesRange, yearRange, text } =
-			input.search;
+		const {
+			memberId,
+			brandList,
+			typeList,
+			fuelList,
+			transmissionList,
+			colorList,
+			pricesRange,
+			yearRange,
+			text,
+			minSpecs,
+		} = input.search;
 
 		if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
 		if (brandList) match.carBrand = { $in: brandList };
@@ -285,6 +295,17 @@ export class CarService {
 		if (pricesRange) match.carPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
 		if (yearRange) match.createdAt = { $gte: yearRange.start, $lte: yearRange.end };
 
+		// ** NEW: Filtering based on minSpecs (minimum specs) ONLY, no max ranges **
+		if (minSpecs) {
+			if (minSpecs.minSeats !== undefined) match.carSeats = { $gte: minSpecs.minSeats };
+			if (minSpecs.minDoors !== undefined) match.carDoors = { $gte: minSpecs.minDoors };
+			if (minSpecs.minCylinders !== undefined) match.carCylinders = { $gte: minSpecs.minCylinders };
+			if (minSpecs.minEngineSize !== undefined) match.carEngineSize = { $gte: minSpecs.minEngineSize };
+			if (minSpecs.minCityMpg !== undefined) match.carCityMpg = { $gte: minSpecs.minCityMpg };
+			if (minSpecs.minHighwayMpg !== undefined) match.carHighwayMpg = { $gte: minSpecs.minHighwayMpg };
+			if (minSpecs.minMaxSpeed !== undefined) match.carMaxSpeed = { $gte: minSpecs.minMaxSpeed };
+		}
+
 		if (text) {
 			const words = text.trim().split(/\s+/);
 
@@ -295,29 +316,5 @@ export class CarService {
 				],
 			}));
 		}
-
-		// if (text) {
-		// 	match.$or = [
-		// 		{ carBrand: { $regex: new RegExp(text, 'i') } }, // car-brand
-		// 		{ carModel: { $regex: new RegExp(text, 'i') } }, // car-model
-		// 	];
-		// }
 	}
 }
-
-// INPUT GA KIRITILADIGAN:
-// {
-//   "input": {
-//            PAGINATION
-//       "page": 1,
-//       "limit": 6,
-
-//            FILTER
-//       "sort": "createdAt",
-//       "direction": "DESC",
-
-//              CATEGORY
-//       "search": {
-//       }
-//   }
-// }

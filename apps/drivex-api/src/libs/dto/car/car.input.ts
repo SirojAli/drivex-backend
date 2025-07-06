@@ -1,11 +1,10 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min, Max } from 'class-validator';
-import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarColor } from '../../enums/car.enum';
+import { Field, InputType, Int, Float } from '@nestjs/graphql';
+import { IsIn, IsInt, IsNotEmpty, IsOptional, Length, Min, Max, Matches, IsBoolean } from 'class-validator';
+import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarDriveType } from '../../enums/car.enum';
 import { ObjectId } from 'mongoose';
 import { availableCarSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
 
-// 1. CAR INPUT
 @InputType()
 export class CarInput {
 	@IsNotEmpty()
@@ -22,11 +21,11 @@ export class CarInput {
 	carType: CarType;
 
 	@IsNotEmpty()
-	@Field(() => Number)
+	@Field(() => Int)
 	carYear: number;
 
 	@IsNotEmpty()
-	@Field(() => Number)
+	@Field(() => Int)
 	carPrice: number;
 
 	@IsNotEmpty()
@@ -38,8 +37,8 @@ export class CarInput {
 	carTransmission: CarTransmission;
 
 	@IsNotEmpty()
-	@Field(() => CarColor)
-	carColor: CarColor;
+	@Field(() => String)
+	carColor: string;
 
 	@IsNotEmpty()
 	@Field(() => [String])
@@ -50,21 +49,68 @@ export class CarInput {
 	@Field(() => String, { nullable: true })
 	carDescription?: string;
 
+	@IsNotEmpty()
+	@Matches(/^[A-HJ-NPR-Z0-9]{17}$/, { message: 'Invalid VIN format' })
+	@Field(() => String)
+	carVinNumber: string;
+
+	@IsNotEmpty()
+	@IsBoolean()
+	@Field(() => Boolean)
+	carIsNew: boolean;
+
+	@IsNotEmpty()
+	@Field(() => Int)
+	@Min(0)
+	carEngineSize: number;
+
+	@IsNotEmpty()
+	@Field(() => Int)
+	@Min(0)
+	carMaxSpeed: number;
+
+	@IsNotEmpty()
+	@Field(() => Int)
+	@Min(1)
+	carSeats: number;
+
+	@IsNotEmpty()
+	@Field(() => Int)
+	@Min(1)
+	carDoors: number;
+
+	@IsNotEmpty()
+	@Field(() => Int)
+	@Min(0)
+	carCityMpg: number;
+
+	@IsNotEmpty()
+	@Field(() => Int)
+	@Min(0)
+	carHighwayMpg: number;
+
+	@IsNotEmpty()
+	@Field(() => Int)
+	@Min(1)
+	carCylinders: number;
+
+	@IsNotEmpty()
+	@Field(() => CarDriveType)
+	carDriveType: CarDriveType;
+
 	memberId?: ObjectId;
 }
 
-// 2. RANGE TYPES
 @InputType()
 export class YearRange {
 	@Field(() => Int)
-	@Min(2000)
+	@Min(2010)
 	start: number;
 
 	@Field(() => Int)
 	@Max(2025)
 	end: number;
 }
-
 @InputType()
 export class PricesRange {
 	@Field(() => Int)
@@ -74,12 +120,36 @@ export class PricesRange {
 	end: number;
 }
 
-// 3. SEARCH FILTERS  (Car Inquiry Search)
 @InputType()
-class CarISearch {
+export class CarMinSpecs {
+	@Field(() => Int, { nullable: true })
+	minSeats?: number;
+
+	@Field(() => Int, { nullable: true })
+	minDoors?: number;
+
+	@Field(() => Int, { nullable: true })
+	minCylinders?: number;
+
+	@Field(() => Float, { nullable: true })
+	minEngineSize?: number;
+
+	@Field(() => Int, { nullable: true })
+	minCityMpg?: number;
+
+	@Field(() => Int, { nullable: true })
+	minHighwayMpg?: number;
+
+	@Field(() => Int, { nullable: true })
+	minMaxSpeed?: number;
+}
+
+// SEARCH FILTERS (Car Inquiry Search)
+@InputType()
+export class CarISearch {
 	@IsOptional()
 	@Field(() => String, { nullable: true })
-	memberId?: ObjectId;
+	memberId?: string;
 
 	@IsOptional()
 	@Field(() => [CarBrand], { nullable: true })
@@ -98,8 +168,8 @@ class CarISearch {
 	transmissionList?: CarTransmission[];
 
 	@IsOptional()
-	@Field(() => [CarColor], { nullable: true })
-	colorList?: CarColor[];
+	@Field(() => [String], { nullable: true })
+	colorList?: string[];
 
 	@IsOptional()
 	@Field(() => PricesRange, { nullable: true })
@@ -110,12 +180,20 @@ class CarISearch {
 	yearRange?: YearRange;
 
 	@IsOptional()
+	@Field(() => Boolean, { nullable: true })
+	carIsNew?: boolean;
+
+	@IsOptional()
+	@Field(() => CarMinSpecs, { nullable: true })
+	minSpecs?: CarMinSpecs;
+
+	@IsOptional()
 	@Length(2, 100)
 	@Field(() => String, { nullable: true })
 	text?: string;
 }
 
-// 4. CAR LISTING QUERY  (Cars Inquiry)
+// CAR LISTING QUERY (Cars Inquiry)
 @InputType()
 export class CarsInquiry {
 	@IsNotEmpty()

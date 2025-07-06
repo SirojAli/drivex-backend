@@ -71,6 +71,9 @@ export class Member {
 	@Field(() => Int)
 	memberBlocks: number;
 
+	@Field(() => String, { nullable: true })
+	brandSlug?: string;
+
 	@Field(() => Date, { nullable: true })
 	deletedAt?: Date;
 

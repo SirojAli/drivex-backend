@@ -1,5 +1,6 @@
 import { Schema } from 'mongoose';
 import { MemberType, MemberStatus, MemberAuthType } from '../libs/enums/member.enum';
+import slugify from 'slugify';
 
 const MemberSchema = new Schema(
 	{
@@ -111,11 +112,26 @@ const MemberSchema = new Schema(
 			default: 0,
 		},
 
+		brandSlug: {
+			type: String,
+			unique: true,
+			sparse: true,
+		},
+
 		deletedAt: {
 			type: Date,
 		},
 	},
 	{ timestamps: true, collection: 'members' },
 );
+
+// Generate brandSlug from memberNick for sellers before saving
+MemberSchema.pre('save', function (next) {
+	if (this.memberType === MemberType.SELLER && (this.isModified('memberNick') || !this.brandSlug)) {
+		const timestamp = Date.now();
+		this.brandSlug = slugify(this.memberNick, { lower: true, strict: true }) + '-' + timestamp;
+	}
+	next();
+});
 
 export default MemberSchema;

@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarColor } from '../../enums/car.enum';
+import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarDriveType } from '../../enums/car.enum';
 import { Member, TotalCounter } from '../member/member';
 import { MeLiked } from '../like/like';
 
@@ -21,10 +21,10 @@ export class Car {
 	@Field(() => CarType)
 	carType: CarType;
 
-	@Field(() => Number)
+	@Field(() => Int)
 	carYear: number;
 
-	@Field(() => Number)
+	@Field(() => Int)
 	carPrice: number;
 
 	@Field(() => CarFuelType)
@@ -33,8 +33,8 @@ export class Car {
 	@Field(() => CarTransmission)
 	carTransmission: CarTransmission;
 
-	@Field(() => CarColor)
-	carColor: CarColor;
+	@Field(() => String)
+	carColor: string;
 
 	@Field(() => [String])
 	carImages: string[];
@@ -53,6 +53,36 @@ export class Car {
 
 	@Field(() => Int)
 	carViews: number;
+
+	@Field(() => String)
+	carVinNumber: string;
+
+	@Field(() => Boolean)
+	carIsNew: boolean;
+
+	@Field(() => Int)
+	carEngineSize: number;
+
+	@Field(() => Int)
+	carMaxSpeed: number;
+
+	@Field(() => Int)
+	carSeats: number;
+
+	@Field(() => Int)
+	carDoors: number;
+
+	@Field(() => Int)
+	carCityMpg: number;
+
+	@Field(() => Int)
+	carHighwayMpg: number;
+
+	@Field(() => Int)
+	carCylinders: number;
+
+	@Field(() => CarDriveType)
+	carDriveType: CarDriveType;
 
 	@Field(() => String)
 	memberId: ObjectId;

@@ -19,6 +19,7 @@ import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
 import { LikeService } from '../like/like.service';
+import slugify from 'slugify';
 
 @Injectable()
 export class BoardArticleService {
@@ -70,7 +71,18 @@ export class BoardArticleService {
 	}
 
 	public async updateBoardArticle(memberId: ObjectId, input: BoardArticleUpdate): Promise<BoardArticle> {
-		const { _id, articleStatus } = input;
+		const { _id, articleStatus, articleTitle } = input;
+
+		// Generate new slug if title is being updated
+		if (articleTitle) {
+			input.articleSlug =
+				slugify(articleTitle, {
+					lower: true,
+					strict: true,
+				}) +
+				'-' +
+				Date.now(); // append timestamp for uniqueness
+		}
 
 		const result = await this.boardArticleModel
 			.findOneAndUpdate({ _id: _id, memberId: memberId, articleStatus: BoardArticleStatus.ACTIVE }, input, {

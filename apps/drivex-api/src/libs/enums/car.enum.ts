@@ -17,14 +17,7 @@ export enum CarBrand {
 	MERCEDES = 'MERCEDES',
 	TOYOTA = 'TOYOTA',
 	AUDI = 'AUDI',
-	PORSCHE = 'PORSCHE',
 	TESLA = 'TESLA',
-	BYD = 'BYD',
-	LEXUS = 'LEXUS',
-	ROLLS_ROYCE = 'ROLLS_ROYCE',
-	FERRARI = 'FERRARI',
-	LAMBORGHINI = 'LAMBORGHINI',
-	BUGATTI = 'BUGATTI',
 }
 registerEnumType(CarBrand, {
 	name: 'CarBrand',
@@ -33,15 +26,10 @@ registerEnumType(CarBrand, {
 export enum CarType {
 	SEDAN = 'SEDAN',
 	SUV = 'SUV',
-	TRUCK = 'TRUCK',
+	HATCHBACK = 'HATCHBACK',
+	CROSSOVER = 'CROSSOVER',
 	COUPE = 'COUPE',
 	CONVERTIBLE = 'CONVERTIBLE',
-	HATCHBACK = 'HATCHBACK',
-	MINIVAN = 'MINIVAN',
-	PICKUP = 'PICKUP',
-	CROSSOVER = 'CROSSOVER',
-	WAGON = 'WAGON',
-	MPV = 'MPV', // Multi-Purpose Vehicle
 }
 registerEnumType(CarType, {
 	name: 'CarType',
@@ -61,26 +49,17 @@ registerEnumType(CarFuelType, {
 export enum CarTransmission {
 	MANUAL = 'MANUAL',
 	AUTO = 'AUTO',
-	SEMI_AUTO = 'SEMI_AUTO',
 }
 registerEnumType(CarTransmission, {
 	name: 'CarTransmission',
 });
 
-export enum CarColor {
-	BLACK = 'BLACK',
-	WHITE = 'WHITE',
-	SILVER = 'SILVER',
-	GREY = 'GREY',
-	BLUE = 'BLUE',
-	RED = 'RED',
-	GREEN = 'GREEN',
-	YELLOW = 'YELLOW',
-	ORANGE = 'ORANGE',
-	BROWN = 'BROWN',
-	GOLD = 'GOLD',
-	PURPLE = 'PURPLE',
+export enum CarDriveType {
+	FWD = 'FWD', // Front-Wheel Drive
+	RWD = 'RWD', // Rear-Wheel Drive
+	AWD = 'AWD', // All-Wheel Drive
+	FOURWD = '4WD', // Four-Wheel Drive
 }
-registerEnumType(CarColor, {
-	name: 'CarColor',
+registerEnumType(CarDriveType, {
+	name: 'CarDriveType',
 });

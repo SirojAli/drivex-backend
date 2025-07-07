@@ -102,8 +102,8 @@ export class CarUpdate {
 	carCylinders?: number;
 
 	@IsOptional()
-	@Field(() => [CarDriveType], { nullable: true })
-	carDriveTypes?: CarDriveType[];
+	@Field(() => CarDriveType, { nullable: true })
+	carDriveType?: CarDriveType;
 
 	soldAt?: Date;
 

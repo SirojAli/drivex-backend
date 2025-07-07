@@ -85,6 +85,9 @@ export class Car {
 	carDriveType: CarDriveType;
 
 	@Field(() => String)
+	carSlug: string;
+
+	@Field(() => String)
 	memberId: ObjectId;
 
 	@Field(() => Date, { nullable: true })

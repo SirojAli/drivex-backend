@@ -19,13 +19,19 @@ const MemberSchema = new Schema(
 		memberAuthType: {
 			type: String,
 			enum: MemberAuthType,
-			default: MemberAuthType.PHONE,
+			default: MemberAuthType.EMAIL,
+		},
+
+		memberEmail: {
+			type: String,
+			index: { unique: true },
+			required: true,
 		},
 
 		memberPhone: {
 			type: String,
 			index: { unique: true, sparse: true },
-			required: true,
+			default: null,
 		},
 
 		memberPassword: {

@@ -19,7 +19,10 @@ export class Member {
 	memberAuthType: MemberAuthType;
 
 	@Field(() => String)
-	memberPhone: string;
+	memberEmail: string;
+
+	@Field(() => String, { nullable: true })
+	memberPhone?: string;
 
 	@Field(() => String)
 	memberNick: string;

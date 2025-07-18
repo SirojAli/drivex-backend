@@ -65,7 +65,7 @@ export class CarInput {
 	carIsNew: boolean;
 
 	@IsNotEmpty()
-	@Field(() => Int)
+	@Field(() => Float)
 	@Min(0)
 	carEngineSize: number;
 
@@ -102,12 +102,6 @@ export class CarInput {
 	@IsNotEmpty()
 	@Field(() => CarDriveType)
 	carDriveType: CarDriveType;
-
-	@IsOptional()
-	@Length(3, 120)
-	@Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, { message: 'Slug must be lowercase, alphanumeric with hyphens' })
-	@Field(() => String, { nullable: true })
-	carSlug?: string;
 
 	memberId?: ObjectId;
 }

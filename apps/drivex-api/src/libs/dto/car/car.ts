@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, Float } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarDriveType } from '../../enums/car.enum';
 import { Member, TotalCounter } from '../member/member';
@@ -63,7 +63,7 @@ export class Car {
 	@Field(() => Boolean)
 	carIsNew: boolean;
 
-	@Field(() => Int)
+	@Field(() => Float)
 	carEngineSize: number;
 
 	@Field(() => Int)

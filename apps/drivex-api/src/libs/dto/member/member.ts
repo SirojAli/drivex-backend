@@ -39,6 +39,9 @@ export class Member {
 	memberAddress?: string;
 
 	@Field(() => String, { nullable: true })
+	memberVideoUrl?: string;
+
+	@Field(() => String, { nullable: true })
 	memberDescription?: string;
 
 	@Field(() => Int)

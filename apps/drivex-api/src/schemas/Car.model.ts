@@ -61,6 +61,11 @@ const CarSchema = new Schema(
 			required: true,
 		},
 
+		carVideoUrl: {
+			type: String,
+			default: '', // URL to .glb or .gltf file
+		},
+
 		carDescription: {
 			type: String,
 		},

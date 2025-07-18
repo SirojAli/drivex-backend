@@ -55,6 +55,11 @@ const MemberSchema = new Schema(
 			default: '',
 		},
 
+		memberVideoUrl: {
+			type: String,
+			default: '', // URL to video links
+		},
+
 		memberAddress: {
 			type: String,
 		},

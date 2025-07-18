@@ -45,6 +45,9 @@ export class MemberUpdate {
 	@Field(() => String, { nullable: true })
 	memberImage?: string;
 
+	@Field(() => String, { nullable: true })
+	memberVideoUrl?: string;
+
 	@IsOptional()
 	@Field(() => String, { nullable: true })
 	memberAddress?: string;

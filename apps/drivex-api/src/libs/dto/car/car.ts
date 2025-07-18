@@ -40,6 +40,9 @@ export class Car {
 	carImages: string[];
 
 	@Field(() => String, { nullable: true })
+	carVideoUrl?: string;
+
+	@Field(() => String, { nullable: true })
 	carDescription?: string;
 
 	@Field(() => Int)

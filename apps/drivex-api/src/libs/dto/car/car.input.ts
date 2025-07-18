@@ -47,6 +47,11 @@ export class CarInput {
 	@IsOptional()
 	@Length(5, 500)
 	@Field(() => String, { nullable: true })
+	carVideoUrl?: string;
+
+	@IsOptional()
+	@Length(5, 500)
+	@Field(() => String, { nullable: true })
 	carDescription?: string;
 
 	@IsNotEmpty()

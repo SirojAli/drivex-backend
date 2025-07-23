@@ -75,6 +75,16 @@ export class MemberResolver {
 		return await this.memberService.getMember(memberId, targetId);
 	}
 
+	// @UseGuards(WithoutGuard)
+	// @Query(() => Members)
+	// public async getSellers(
+	// 	@Args('input') input: SellersInquiry,
+	// 	@AuthMember('_id') memberId: ObjectId,
+	// ): Promise<Members> {
+	// 	console.log('Query: getSellers');
+	// 	return await this.memberService.getSellers(memberId, input);
+	// }
+
 	@UseGuards(WithoutGuard)
 	@Query(() => Members)
 	public async getSellers(
@@ -82,7 +92,13 @@ export class MemberResolver {
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Members> {
 		console.log('Query: getSellers');
-		return await this.memberService.getSellers(memberId, input);
+		console.log('Received input:', JSON.stringify(input, null, 2));
+		try {
+			return await this.memberService.getSellers(memberId, input);
+		} catch (err) {
+			console.error('Error in getSellers:', err);
+			throw err; // re-throw so GraphQL can handle it
+		}
 	}
 
 	@UseGuards(AuthGuard)

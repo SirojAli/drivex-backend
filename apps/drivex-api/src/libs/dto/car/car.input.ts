@@ -5,6 +5,7 @@ import { ObjectId } from 'mongoose';
 import { availableCarSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
 
+// CAR INPUT for Create/Update
 @InputType()
 export class CarInput {
 	@IsNotEmpty()
@@ -106,23 +107,14 @@ export class CarInput {
 	memberId?: ObjectId;
 }
 
-@InputType()
-export class YearRange {
-	@Field(() => Int)
-	@Min(2010)
-	start: number;
-
-	@Field(() => Int)
-	@Max(2025)
-	end: number;
-}
+// RANGES
 @InputType()
 export class PricesRange {
 	@Field(() => Int)
-	start: number;
+	min: number;
 
 	@Field(() => Int)
-	end: number;
+	max: number;
 }
 
 @InputType()
@@ -154,43 +146,51 @@ export class CarMinSpecs {
 export class CarISearch {
 	@IsOptional()
 	@Field(() => String, { nullable: true })
-	memberId?: string;
+	memberId?: ObjectId;
 
 	@IsOptional()
 	@Field(() => [CarBrand], { nullable: true })
-	brandList?: CarBrand[];
+	carBrand?: CarBrand[];
 
 	@IsOptional()
 	@Field(() => [CarType], { nullable: true })
-	typeList?: CarType[];
+	carType?: CarType[];
 
 	@IsOptional()
-	@Field(() => [CarFuelType], { nullable: true })
-	fuelList?: CarFuelType[];
-
-	@IsOptional()
-	@Field(() => [CarTransmission], { nullable: true })
-	transmissionList?: CarTransmission[];
-
-	@IsOptional()
-	@Field(() => [String], { nullable: true })
-	colorList?: string[];
+	@Field(() => Int, { nullable: true })
+	carYear?: number;
 
 	@IsOptional()
 	@Field(() => PricesRange, { nullable: true })
-	pricesRange?: PricesRange;
+	carPrice?: PricesRange;
 
 	@IsOptional()
-	@Field(() => YearRange, { nullable: true })
-	yearRange?: YearRange;
+	@Field(() => [CarFuelType], { nullable: true })
+	carFuelType?: CarFuelType[];
 
 	@IsOptional()
-	@Field(() => Boolean, { nullable: true })
-	carIsNew?: boolean;
+	@Field(() => [CarTransmission], { nullable: true })
+	carTransmission?: CarTransmission[];
 
 	@IsOptional()
-	@Field(() => CarMinSpecs, { nullable: true })
-	minSpecs?: CarMinSpecs;
+	@Field(() => [CarDriveType], { nullable: true })
+	carDriveType?: CarDriveType[];
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	carColor?: string;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	carSeats?: number;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	carDoors?: number;
+
+	@IsOptional()
+	@Field(() => Float, { nullable: true })
+	carEngineSize?: number;
 
 	@IsOptional()
 	@Length(2, 100)
@@ -231,6 +231,42 @@ class SCISearch {
 	@IsOptional()
 	@Field(() => CarStatus, { nullable: true })
 	carStatus?: CarStatus;
+
+	@IsOptional()
+	@Field(() => [CarBrand], { nullable: true })
+	carBrand?: CarBrand[];
+
+	@IsOptional()
+	@Field(() => [CarType], { nullable: true })
+	carType?: CarType[];
+
+	@IsOptional()
+	@Field(() => [CarFuelType], { nullable: true })
+	carFuelType?: CarFuelType[];
+
+	@IsOptional()
+	@Field(() => [CarTransmission], { nullable: true })
+	carTransmission?: CarTransmission[];
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	carColor?: string;
+
+	@IsOptional()
+	@Field(() => Boolean, { nullable: true })
+	carIsNew?: boolean;
+
+	@IsOptional()
+	@Field(() => PricesRange, { nullable: true })
+	carPrice?: PricesRange;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	carYear?: number;
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	text?: string;
 }
 
 @InputType()
@@ -268,7 +304,59 @@ class ALCISearch {
 
 	@IsOptional()
 	@Field(() => [CarBrand], { nullable: true })
-	carBrandList?: CarBrand[];
+	carBrand?: CarBrand[];
+
+	@IsOptional()
+	@Field(() => [CarType], { nullable: true })
+	carType?: CarType[];
+
+	@IsOptional()
+	@Field(() => [CarFuelType], { nullable: true })
+	carFuelType?: CarFuelType[];
+
+	@IsOptional()
+	@Field(() => [CarTransmission], { nullable: true })
+	carTransmission?: CarTransmission[];
+
+	@IsOptional()
+	@Field(() => [CarDriveType], { nullable: true })
+	carDriveType?: CarDriveType[];
+
+	@IsOptional()
+	@Field(() => PricesRange, { nullable: true })
+	carPrice?: PricesRange;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	carYear?: number;
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	carColor?: string;
+
+	@IsOptional()
+	@Field(() => Boolean, { nullable: true })
+	carIsNew?: boolean;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	carSeats?: number;
+
+	@IsOptional()
+	@Field(() => Int, { nullable: true })
+	carDoors?: number;
+
+	@IsOptional()
+	@Field(() => Float, { nullable: true })
+	carEngineSize?: number;
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	memberId?: ObjectId;
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	text?: string;
 }
 
 @InputType()

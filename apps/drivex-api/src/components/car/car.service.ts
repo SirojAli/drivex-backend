@@ -104,6 +104,7 @@ export class CarService {
 	public async getCars(memberId: ObjectId, input: CarsInquiry): Promise<Cars> {
 		const match: T = { carStatus: CarStatus.ACTIVE };
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+
 		this.shapeMatchQuery(match, input);
 		console.log('match:', match);
 
@@ -125,20 +126,31 @@ export class CarService {
 				},
 			])
 			.exec();
+
 		console.log('result:', result);
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		if (!result.length) {
+			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		}
+
 		return result[0];
 	}
 
 	public async getSellerCars(memberId: ObjectId, input: SellerCarsInquiry): Promise<Cars> {
-		const { carStatus } = input.search;
-		if (carStatus === CarStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
+		const { carStatus, carYear } = input.search;
+
+		if (carStatus === CarStatus.DELETE) {
+			throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
+		}
 
 		const match: T = {
 			memberId: memberId,
 			carStatus: carStatus ?? { $ne: CarStatus.DELETE },
+			...(carYear ? { carYear } : {}),
 		};
+
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+
 		const result = await this.carModel
 			.aggregate([
 				{ $match: match },
@@ -156,8 +168,13 @@ export class CarService {
 				},
 			])
 			.exec();
+
 		console.log('result:', result);
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		if (!result.length) {
+			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		}
+
 		return result[0];
 	}
 
@@ -199,12 +216,21 @@ export class CarService {
 
 	// /** ADMIN **/
 	public async getAllCarsByAdmin(input: AllCarsInquiry): Promise<Cars> {
-		const { carStatus, carBrandList } = input.search;
-		const match: T = {};
-		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+		const { carStatus, carBrand, carYear } = input.search;
 
-		if (carStatus) match.carStatus = carStatus;
-		if (carBrandList) match.carBrandList = { $in: carBrandList };
+		const match: T = {};
+
+		if (carStatus) {
+			match.carStatus = carStatus;
+		}
+		if (carBrand) {
+			match.carBrand = { $in: carBrand };
+		}
+		if (carYear) {
+			match.carYear = carYear;
+		}
+
+		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
 		const result = await this.carModel
 			.aggregate([
@@ -223,8 +249,13 @@ export class CarService {
 				},
 			])
 			.exec();
+
 		console.log('result:', result);
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		if (!result.length) {
+			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		}
+
 		return result[0];
 	}
 
@@ -274,47 +305,57 @@ export class CarService {
 	private shapeMatchQuery(match: T, input: CarsInquiry): void {
 		const {
 			memberId,
-			brandList,
-			typeList,
-			fuelList,
-			transmissionList,
-			colorList,
-			pricesRange,
-			yearRange,
+			carBrand,
+			carType,
+			carFuelType,
+			carTransmission,
+			carDriveType,
+			carColor,
+			carPrice,
+			carYear,
+			carSeats,
+			carDoors,
+			carEngineSize,
 			text,
-			minSpecs,
 		} = input.search;
 
-		if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-		if (brandList) match.carBrand = { $in: brandList };
-		if (typeList) match.carType = { $in: typeList };
-		if (fuelList) match.carFuelType = { $in: fuelList };
-		if (transmissionList) match.carTransmission = { $in: transmissionList };
-		if (colorList) match.carColor = { $in: colorList };
-
-		if (pricesRange) match.carPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
-		if (yearRange) match.createdAt = { $gte: yearRange.start, $lte: yearRange.end };
-
-		// ** NEW: Filtering based on minSpecs (minimum specs) ONLY, no max ranges **
-		if (minSpecs) {
-			if (minSpecs.minSeats !== undefined) match.carSeats = { $gte: minSpecs.minSeats };
-			if (minSpecs.minDoors !== undefined) match.carDoors = { $gte: minSpecs.minDoors };
-			if (minSpecs.minCylinders !== undefined) match.carCylinders = { $gte: minSpecs.minCylinders };
-			if (minSpecs.minEngineSize !== undefined) match.carEngineSize = { $gte: minSpecs.minEngineSize };
-			if (minSpecs.minCityMpg !== undefined) match.carCityMpg = { $gte: minSpecs.minCityMpg };
-			if (minSpecs.minHighwayMpg !== undefined) match.carHighwayMpg = { $gte: minSpecs.minHighwayMpg };
-			if (minSpecs.minMaxSpeed !== undefined) match.carMaxSpeed = { $gte: minSpecs.minMaxSpeed };
+		// Shape ObjectId
+		if (memberId) {
+			match.memberId = shapeIntoMongoObjectId(memberId);
 		}
 
-		if (text) {
-			const words = text.trim().split(/\s+/);
+		// Enums & Array Filters
+		if (carBrand?.length) match.carBrand = { $in: carBrand };
+		if (carType?.length) match.carType = { $in: carType };
+		if (carFuelType?.length) match.carFuelType = { $in: carFuelType };
+		if (carTransmission?.length) match.carTransmission = { $in: carTransmission };
+		if (carDriveType?.length) match.carDriveType = { $in: carDriveType };
 
-			match.$and = words.map((word) => ({
-				$or: [
-					{ carBrand: { $regex: new RegExp(word, 'i') } }, //
-					{ carModel: { $regex: new RegExp(word, 'i') } }, //
-				],
-			}));
+		// Scalar Filters
+		if (carColor) match.carColor = carColor;
+		if (carYear !== undefined) match.carYear = carYear;
+
+		// Range Filters
+		if (carPrice) {
+			match.carPrice = {
+				$gte: carPrice.min,
+				$lte: carPrice.max,
+			};
+		}
+
+		if (carSeats !== undefined) match.carSeats = { $gte: carSeats };
+		if (carDoors !== undefined) match.carDoors = { $gte: carDoors };
+		if (carEngineSize !== undefined) match.carEngineSize = { $gte: carEngineSize };
+
+		// Text Search (brand/model)
+		if (text?.trim()) {
+			const words = text
+				.trim()
+				.split(/\s+/)
+				.map((word) => ({
+					$or: [{ carBrand: { $regex: word, $options: 'i' } }, { carModel: { $regex: word, $options: 'i' } }],
+				}));
+			match.$and = [...(match.$and || []), ...words];
 		}
 	}
 }

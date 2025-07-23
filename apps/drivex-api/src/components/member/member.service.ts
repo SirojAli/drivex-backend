@@ -108,7 +108,8 @@ export class MemberService {
 	}
 
 	public async getSellers(memberId: ObjectId, input: SellersInquiry): Promise<Members> {
-		const { text } = input.search;
+		console.log('Received getSellers input:', JSON.stringify(input, null, 2));
+		const { text } = input.search ?? {};
 		const match: T = { memberType: MemberType.SELLER, memberStatus: MemberStatus.ACTIVE };
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 

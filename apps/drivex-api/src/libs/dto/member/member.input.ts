@@ -1,8 +1,9 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsEmail, IsIn, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
+import { ValidateNested, IsEmail, IsIn, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
 import { MemberType, MemberAuthType, MemberStatus } from '../../enums/member.enum';
 import { availableSellerSorts, availableMemberSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
+import { Type } from 'class-transformer';
 
 @InputType()
 export class MemberInput {
@@ -76,9 +77,11 @@ export class SellersInquiry {
 	@Field(() => Direction, { nullable: true })
 	direction?: Direction;
 
-	@IsNotEmpty()
-	@Field(() => SISearch)
-	search: SISearch;
+	@IsOptional()
+	@ValidateNested()
+	@Type(() => SISearch)
+	@Field(() => SISearch, { nullable: true })
+	search?: SISearch;
 }
 
 @InputType()

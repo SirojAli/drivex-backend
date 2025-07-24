@@ -1,5 +1,5 @@
 import { Field, InputType, Int, Float } from '@nestjs/graphql';
-import { IsIn, IsInt, IsNotEmpty, IsOptional, Length, Min, Max, Matches, IsBoolean } from 'class-validator';
+import { IsIn, IsNotEmpty, IsOptional, Length, Min, Max, Matches, IsBoolean } from 'class-validator';
 import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarDriveType } from '../../enums/car.enum';
 import { ObjectId } from 'mongoose';
 import { availableCarSorts } from '../../config';
@@ -149,8 +149,16 @@ export class CarISearch {
 	memberId?: ObjectId;
 
 	@IsOptional()
+	@Field(() => [CarStatus], { nullable: true })
+	carStatus?: CarStatus[];
+
+	@IsOptional()
 	@Field(() => [CarBrand], { nullable: true })
 	carBrand?: CarBrand[];
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	carModel?: string;
 
 	@IsOptional()
 	@Field(() => [CarType], { nullable: true })

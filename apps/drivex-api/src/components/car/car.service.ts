@@ -102,7 +102,7 @@ export class CarService {
 	}
 
 	public async getCars(memberId: ObjectId, input: CarsInquiry): Promise<Cars> {
-		const match: T = { carStatus: CarStatus.ACTIVE };
+		const match: T = { carStatus: { $in: [CarStatus.ACTIVE, CarStatus.SOLD] } };
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
 		this.shapeMatchQuery(match, input);
@@ -305,7 +305,9 @@ export class CarService {
 	private shapeMatchQuery(match: T, input: CarsInquiry): void {
 		const {
 			memberId,
+			carStatus,
 			carBrand,
+			carModel,
 			carType,
 			carFuelType,
 			carTransmission,
@@ -325,6 +327,11 @@ export class CarService {
 		}
 
 		// Enums & Array Filters
+		if (carStatus?.length) {
+			match.carStatus = { $in: carStatus };
+		} else {
+			match.carStatus = { $in: [CarStatus.ACTIVE, CarStatus.SOLD] };
+		}
 		if (carBrand?.length) match.carBrand = { $in: carBrand };
 		if (carType?.length) match.carType = { $in: carType };
 		if (carFuelType?.length) match.carFuelType = { $in: carFuelType };
@@ -332,6 +339,7 @@ export class CarService {
 		if (carDriveType?.length) match.carDriveType = { $in: carDriveType };
 
 		// Scalar Filters
+		if (carModel) match.carModel = carModel;
 		if (carColor) match.carColor = carColor;
 		if (carYear !== undefined) match.carYear = carYear;
 
@@ -347,15 +355,9 @@ export class CarService {
 		if (carDoors !== undefined) match.carDoors = { $gte: carDoors };
 		if (carEngineSize !== undefined) match.carEngineSize = { $gte: carEngineSize };
 
-		// Text Search (brand/model)
+		// Text Search (carModel)
 		if (text?.trim()) {
-			const words = text
-				.trim()
-				.split(/\s+/)
-				.map((word) => ({
-					$or: [{ carBrand: { $regex: word, $options: 'i' } }, { carModel: { $regex: word, $options: 'i' } }],
-				}));
-			match.$and = [...(match.$and || []), ...words];
+			match.carModel = { $regex: new RegExp(text.trim(), 'i') };
 		}
 	}
 }

@@ -8,7 +8,7 @@ export const availableSellerSorts = ['createdAt', 'updatedAt', 'memberLikes', 'm
 export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank'];
 
 /** Car related **/
-export const availableCarSorts = ['createdAt', 'updatedAt', 'carLikes', 'carViews', 'carRank', 'carPrice'];
+export const availableCarSorts = ['createdAt', 'updatedAt', 'carLikes', 'carViews', 'carRank', 'carPrice', 'carYear'];
 
 /** Article related **/
 export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews'];

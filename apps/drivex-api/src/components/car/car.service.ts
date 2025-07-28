@@ -216,21 +216,12 @@ export class CarService {
 
 	// /** ADMIN **/
 	public async getAllCarsByAdmin(input: AllCarsInquiry): Promise<Cars> {
-		const { carStatus, carBrand, carYear } = input.search;
-
+		const { carStatus, carBrandList } = input.search;
 		const match: T = {};
-
-		if (carStatus) {
-			match.carStatus = carStatus;
-		}
-		if (carBrand) {
-			match.carBrand = { $in: carBrand };
-		}
-		if (carYear) {
-			match.carYear = carYear;
-		}
-
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+
+		if (carStatus) match.carStatus = carStatus;
+		if (carBrandList) match.carBrandList = { $in: carBrandList };
 
 		const result = await this.carModel
 			.aggregate([
@@ -249,13 +240,8 @@ export class CarService {
 				},
 			])
 			.exec();
-
 		console.log('result:', result);
-
-		if (!result.length) {
-			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		}
-
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		return result[0];
 	}
 
@@ -306,42 +292,39 @@ export class CarService {
 		const {
 			memberId,
 			carStatus,
-			carBrand,
+			brandList,
 			carModel,
-			carType,
-			carFuelType,
-			carTransmission,
-			carDriveType,
-			carColor,
+			typeList,
+			fuelTypeList,
+			transmissionList,
+			driveTypeList,
+			colorList,
 			carPrice,
 			carYear,
-			carSeats,
-			carDoors,
-			carEngineSize,
+			seatsList,
+			doorsList,
+			engineSizeList,
 			text,
 		} = input.search;
 
-		// Shape ObjectId
 		if (memberId) {
 			match.memberId = shapeIntoMongoObjectId(memberId);
 		}
-
-		// Enums & Array Filters
 		if (carStatus?.length) {
 			match.carStatus = { $in: carStatus };
 		} else {
 			match.carStatus = { $in: [CarStatus.ACTIVE, CarStatus.SOLD] };
 		}
-		if (carBrand?.length) match.carBrand = { $in: carBrand };
-		if (carType?.length) match.carType = { $in: carType };
-		if (carFuelType?.length) match.carFuelType = { $in: carFuelType };
-		if (carTransmission?.length) match.carTransmission = { $in: carTransmission };
-		if (carDriveType?.length) match.carDriveType = { $in: carDriveType };
+		if (brandList && brandList?.length) match.carBrand = { $in: brandList };
+		if (typeList && typeList?.length) match.carType = { $in: typeList };
+		if (fuelTypeList && fuelTypeList?.length) match.carFuelType = { $in: fuelTypeList };
+		if (transmissionList && transmissionList?.length) match.carTransmission = { $in: transmissionList };
+		if (driveTypeList && driveTypeList?.length) match.carDriveType = { $in: driveTypeList };
 
-		// Scalar Filters
-		if (carModel) match.carModel = carModel;
-		if (carColor) match.carColor = carColor;
-		if (carYear !== undefined) match.carYear = carYear;
+		if (colorList && colorList?.length) match.carColor = { $in: colorList };
+		if (seatsList && seatsList?.length) match.carSeats = { $in: seatsList };
+		if (doorsList && doorsList?.length) match.carDoors = { $in: doorsList };
+		if (engineSizeList && engineSizeList?.length) match.carEngineSize = { $in: engineSizeList };
 
 		// Range Filters
 		if (carPrice) {
@@ -350,14 +333,34 @@ export class CarService {
 				$lte: carPrice.max,
 			};
 		}
+		if (carYear) {
+			match.carYear = {
+				$gte: carYear.min,
+				$lte: carYear.max,
+			};
+		}
 
-		if (carSeats !== undefined) match.carSeats = { $gte: carSeats };
-		if (carDoors !== undefined) match.carDoors = { $gte: carDoors };
-		if (carEngineSize !== undefined) match.carEngineSize = { $gte: carEngineSize };
-
-		// Text Search (carModel)
 		if (text?.trim()) {
-			match.carModel = { $regex: new RegExp(text.trim(), 'i') };
+			const words = text.trim().split(/\s+/);
+			if (words.length === 1) {
+				// simple single word search
+				match.carModel = { $regex: words[0], $options: 'i' };
+			} else {
+				// multiple words: require all words to be present (AND condition)
+				match.$and = words.map((word) => ({
+					carModel: { $regex: word, $options: 'i' },
+				}));
+			}
+		} else if (carModel) {
+			// same logic if carModel filter exists and no text
+			const words = carModel.trim().split(/\s+/);
+			if (words.length === 1) {
+				match.carModel = { $regex: words[0], $options: 'i' };
+			} else {
+				match.$and = words.map((word) => ({
+					carModel: { $regex: word, $options: 'i' },
+				}));
+			}
 		}
 	}
 }

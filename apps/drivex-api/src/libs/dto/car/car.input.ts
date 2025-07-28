@@ -118,6 +118,15 @@ export class PricesRange {
 }
 
 @InputType()
+export class YearRange {
+	@Field(() => Int)
+	min: number;
+
+	@Field(() => Int)
+	max: number;
+}
+
+@InputType()
 export class CarMinSpecs {
 	@Field(() => Int, { nullable: true })
 	minSeats?: number;
@@ -154,7 +163,7 @@ export class CarISearch {
 
 	@IsOptional()
 	@Field(() => [CarBrand], { nullable: true })
-	carBrand?: CarBrand[];
+	brandList?: CarBrand[];
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })
@@ -162,11 +171,11 @@ export class CarISearch {
 
 	@IsOptional()
 	@Field(() => [CarType], { nullable: true })
-	carType?: CarType[];
+	typeList?: CarType[];
 
 	@IsOptional()
-	@Field(() => Int, { nullable: true })
-	carYear?: number;
+	@Field(() => YearRange, { nullable: true })
+	carYear?: YearRange;
 
 	@IsOptional()
 	@Field(() => PricesRange, { nullable: true })
@@ -174,31 +183,31 @@ export class CarISearch {
 
 	@IsOptional()
 	@Field(() => [CarFuelType], { nullable: true })
-	carFuelType?: CarFuelType[];
+	fuelTypeList?: CarFuelType[];
 
 	@IsOptional()
 	@Field(() => [CarTransmission], { nullable: true })
-	carTransmission?: CarTransmission[];
+	transmissionList?: CarTransmission[];
 
 	@IsOptional()
 	@Field(() => [CarDriveType], { nullable: true })
-	carDriveType?: CarDriveType[];
+	driveTypeList?: CarDriveType[];
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })
-	carColor?: string;
+	colorList?: string;
 
 	@IsOptional()
-	@Field(() => Int, { nullable: true })
-	carSeats?: number;
+	@Field(() => [Int], { nullable: true })
+	seatsList?: number[];
 
 	@IsOptional()
-	@Field(() => Int, { nullable: true })
-	carDoors?: number;
+	@Field(() => [Int], { nullable: true })
+	doorsList?: number[];
 
 	@IsOptional()
-	@Field(() => Float, { nullable: true })
-	carEngineSize?: number;
+	@Field(() => [Float], { nullable: true })
+	engineSizeList?: number[];
 
 	@IsOptional()
 	@Length(2, 100)
@@ -312,59 +321,7 @@ class ALCISearch {
 
 	@IsOptional()
 	@Field(() => [CarBrand], { nullable: true })
-	carBrand?: CarBrand[];
-
-	@IsOptional()
-	@Field(() => [CarType], { nullable: true })
-	carType?: CarType[];
-
-	@IsOptional()
-	@Field(() => [CarFuelType], { nullable: true })
-	carFuelType?: CarFuelType[];
-
-	@IsOptional()
-	@Field(() => [CarTransmission], { nullable: true })
-	carTransmission?: CarTransmission[];
-
-	@IsOptional()
-	@Field(() => [CarDriveType], { nullable: true })
-	carDriveType?: CarDriveType[];
-
-	@IsOptional()
-	@Field(() => PricesRange, { nullable: true })
-	carPrice?: PricesRange;
-
-	@IsOptional()
-	@Field(() => Int, { nullable: true })
-	carYear?: number;
-
-	@IsOptional()
-	@Field(() => String, { nullable: true })
-	carColor?: string;
-
-	@IsOptional()
-	@Field(() => Boolean, { nullable: true })
-	carIsNew?: boolean;
-
-	@IsOptional()
-	@Field(() => Int, { nullable: true })
-	carSeats?: number;
-
-	@IsOptional()
-	@Field(() => Int, { nullable: true })
-	carDoors?: number;
-
-	@IsOptional()
-	@Field(() => Float, { nullable: true })
-	carEngineSize?: number;
-
-	@IsOptional()
-	@Field(() => String, { nullable: true })
-	memberId?: ObjectId;
-
-	@IsOptional()
-	@Field(() => String, { nullable: true })
-	text?: string;
+	carBrandList?: CarBrand[];
 }
 
 @InputType()

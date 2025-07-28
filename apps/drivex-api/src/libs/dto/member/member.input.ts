@@ -54,6 +54,10 @@ class SISearch {
 	@IsOptional()
 	@Field(() => String, { nullable: true })
 	text?: string;
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	brandSlug?: string;
 }
 
 @InputType()

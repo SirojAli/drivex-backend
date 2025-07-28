@@ -17,7 +17,7 @@ export enum CarBrand {
 	MERCEDES = 'MERCEDES',
 	TOYOTA = 'TOYOTA',
 	AUDI = 'AUDI',
-	TESLA = 'TESLA',
+	LEXUS = 'LEXUS',
 }
 registerEnumType(CarBrand, {
 	name: 'CarBrand',

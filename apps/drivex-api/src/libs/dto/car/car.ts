@@ -1,6 +1,14 @@
 import { Field, Int, ObjectType, Float } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarDriveType } from '../../enums/car.enum';
+import {
+	CarType,
+	CarBrand,
+	CarStatus,
+	CarFuelType,
+	CarTransmission,
+	CarDriveType,
+	CarColor,
+} from '../../enums/car.enum';
 import { Member, TotalCounter } from '../member/member';
 import { MeLiked } from '../like/like';
 
@@ -33,8 +41,8 @@ export class Car {
 	@Field(() => CarTransmission)
 	carTransmission: CarTransmission;
 
-	@Field(() => String)
-	carColor: string;
+	@Field(() => CarColor)
+	carColor: CarColor;
 
 	@Field(() => [String])
 	carImages: string[];

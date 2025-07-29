@@ -1,5 +1,13 @@
 import { Schema } from 'mongoose';
-import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarDriveType } from '../libs/enums/car.enum';
+import {
+	CarType,
+	CarBrand,
+	CarStatus,
+	CarFuelType,
+	CarTransmission,
+	CarDriveType,
+	CarColor,
+} from '../libs/enums/car.enum';
 import { generateSlug } from '../libs/utils/slugify.util';
 
 const CarSchema = new Schema(
@@ -53,6 +61,7 @@ const CarSchema = new Schema(
 
 		carColor: {
 			type: String,
+			enum: CarColor,
 			required: true,
 		},
 

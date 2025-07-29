@@ -1,6 +1,14 @@
 import { Field, InputType, Int, Float } from '@nestjs/graphql';
 import { IsIn, IsNotEmpty, IsOptional, Length, Min, Max, Matches, IsBoolean } from 'class-validator';
-import { CarType, CarBrand, CarStatus, CarFuelType, CarTransmission, CarDriveType } from '../../enums/car.enum';
+import {
+	CarType,
+	CarBrand,
+	CarStatus,
+	CarFuelType,
+	CarTransmission,
+	CarDriveType,
+	CarColor,
+} from '../../enums/car.enum';
 import { ObjectId } from 'mongoose';
 import { availableCarSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
@@ -38,8 +46,8 @@ export class CarInput {
 	carTransmission: CarTransmission;
 
 	@IsNotEmpty()
-	@Field(() => String)
-	carColor: string;
+	@Field(() => CarColor)
+	carColor: CarColor;
 
 	@IsNotEmpty()
 	@Field(() => [String])
@@ -194,8 +202,8 @@ export class CarISearch {
 	driveTypeList?: CarDriveType[];
 
 	@IsOptional()
-	@Field(() => String, { nullable: true })
-	colorList?: string;
+	@Field(() => [CarColor], { nullable: true })
+	colorList?: CarColor[];
 
 	@IsOptional()
 	@Field(() => [Int], { nullable: true })
@@ -266,8 +274,8 @@ class SCISearch {
 	carTransmission?: CarTransmission[];
 
 	@IsOptional()
-	@Field(() => String, { nullable: true })
-	carColor?: string;
+	@Field(() => [CarColor], { nullable: true })
+	carColor?: CarColor[];
 
 	@IsOptional()
 	@Field(() => Boolean, { nullable: true })

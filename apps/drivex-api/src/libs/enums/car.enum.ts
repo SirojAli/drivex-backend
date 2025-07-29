@@ -63,3 +63,21 @@ export enum CarDriveType {
 registerEnumType(CarDriveType, {
 	name: 'CarDriveType',
 });
+
+export enum CarColor {
+	WHITE = 'WHITE',
+	BLACK = 'BLACK',
+	GRAY = 'GRAY',
+	BLUE = 'BLUE',
+	RED = 'RED',
+	BROWN = 'BROWN',
+	GREEN = 'GREEN',
+	YELLOW = 'YELLOW',
+	ORANGE = 'ORANGE',
+	PURPLE = 'PURPLE',
+	OTHER = 'OTHER',
+}
+
+registerEnumType(CarColor, {
+	name: 'CarColor',
+});

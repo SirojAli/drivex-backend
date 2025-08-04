@@ -59,7 +59,7 @@ export class CarInput {
 	carVideoUrl?: string;
 
 	@IsOptional()
-	@Length(5, 500)
+	@Length(5, 3000)
 	@Field(() => String, { nullable: true })
 	carDescription?: string;
 

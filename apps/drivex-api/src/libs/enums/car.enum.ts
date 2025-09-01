@@ -12,12 +12,12 @@ registerEnumType(CarStatus, {
 export enum CarBrand {
 	KIA = 'KIA',
 	HYUNDAI = 'HYUNDAI',
-	GENESIS = 'GENESIS',
 	BMW = 'BMW',
 	MERCEDES = 'MERCEDES',
 	TOYOTA = 'TOYOTA',
 	AUDI = 'AUDI',
 	LEXUS = 'LEXUS',
+	HONDA = 'HONDA',
 }
 registerEnumType(CarBrand, {
 	name: 'CarBrand',

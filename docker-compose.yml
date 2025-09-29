@@ -6,13 +6,10 @@ services:
     ports:
       - 4001:3007
     volumes:
-      - /root/drivex-backend:/usr/src/drivex-backend
+      - /root/drivex-project/drivex-backend:/usr/src/drivex-backend
     working_dir: /usr/src/drivex-backend
-
     networks:
       - monorepo-network
-
-    # FOR PRODUCTION
     command: bash -c "rm -rf dist && npm install && npm run build && npm run start:prod"
 
   drivex-batch:
@@ -22,13 +19,10 @@ services:
     ports:
       - 4002:3008
     volumes:
-      - /root/drivex-backend:/usr/src/drivex-backend
+      - /root/drivex-project/drivex-backend:/usr/src/drivex-backend
     working_dir: /usr/src/drivex-backend
-
     networks:
       - monorepo-network
-
-    # FOR PRODUCTION
     command: bash -c "npm install && npm run build && npm run start:prod:batch"
 
 networks:

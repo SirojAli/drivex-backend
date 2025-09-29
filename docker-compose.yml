@@ -1,32 +1,35 @@
-drivex-api:
-  container_name: drivex-api
-  restart: always
-  image: node:20.10.0
-  ports:
-    - 4001:3007
-  volumes:
-    - /root/drivex-backend:/usr/src/drivex-backend
-  working_dir: /usr/src/drivex-backend
-  networks:
-    - monorepo-network
+services:
+  drivex-api:
+    container_name: drivex-api
+    restart: always
+    image: node:20.10.0
+    ports:
+      - 4001:3007
+    volumes:
+      - /root/drivex-backend:/usr/src/drivex-backend
+    working_dir: /usr/src/drivex-backend
 
-  # FOR PRODUCTION
-  command: bash -c "rm -rf dist && npm install && npm run build && npm run start:prod"
+    networks:
+      - monorepo-network
 
-drivex-batch:
-  container_name: drivex-batch
-  restart: unless-stopped
-  image: node:20.10.0
-  ports:
-    - 4002:3008
-  volumes:
-    - /root/drivex-backend:/usr/src/drivex-backend
-  working_dir: /usr/src/drivex-backend
-  networks:
-    - monorepo-network
+    # FOR PRODUCTION
+    command: bash -c "rm -rf dist && npm install && npm run build && npm run start:prod"
 
-  # FOR PRODUCTION
-  command: bash -c "npm install && npm run build && npm run start:prod:batch"
+  drivex-batch:
+    container_name: drivex-batch
+    restart: unless-stopped
+    image: node:20.10.0
+    ports:
+      - 4002:3008
+    volumes:
+      - /root/drivex-backend:/usr/src/drivex-backend
+    working_dir: /usr/src/drivex-backend
+
+    networks:
+      - monorepo-network
+
+    # FOR PRODUCTION
+    command: bash -c "npm install && npm run build && npm run start:prod:batch"
 
 networks:
   monorepo-network:

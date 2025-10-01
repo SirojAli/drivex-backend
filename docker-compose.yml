@@ -6,7 +6,7 @@ services:
     ports:
       - 4001:3007
     volumes:
-      - /root/drivex-project/drivex-backend:/usr/src/drivex-backend
+      - /home/drivex-project/drivex-backend:/usr/src/drivex-backend
     working_dir: /usr/src/drivex-backend
     networks:
       - monorepo-network
@@ -19,7 +19,7 @@ services:
     ports:
       - 4002:3008
     volumes:
-      - /root/drivex-project/drivex-backend:/usr/src/drivex-backend
+      - /home/drivex-project/drivex-backend:/usr/src/drivex-backend
     working_dir: /usr/src/drivex-backend
     networks:
       - monorepo-network

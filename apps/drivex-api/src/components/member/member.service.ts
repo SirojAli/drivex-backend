@@ -30,6 +30,9 @@ export class MemberService {
 
 	public async signup(input: MemberInput): Promise<Member> {
 		input.memberPassword = await this.authService.hashPassword(input.memberPassword);
+		// Remove memberPhone if empty
+		if (!input.memberPhone) delete input.memberPhone;
+
 		try {
 			const result = await this.memberModel.create(input);
 			result.accessToken = await this.authService.createToken(result);

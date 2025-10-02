@@ -30,7 +30,6 @@ const MemberSchema = new Schema(
 
 		memberPhone: {
 			type: String,
-			index: { unique: true, sparse: true, partialFilterExpression: { memberPhone: { $exists: true } } },
 			default: null,
 		},
 

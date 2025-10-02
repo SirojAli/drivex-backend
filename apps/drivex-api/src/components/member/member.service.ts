@@ -32,13 +32,13 @@ export class MemberService {
 		input.memberPassword = await this.authService.hashPassword(input.memberPassword);
 		try {
 			const result = await this.memberModel.create(input);
-
 			result.accessToken = await this.authService.createToken(result);
 			// console.log('accessToken', accessToken);
+
 			return result;
 		} catch (err) {
 			console.log('Error, Service.model:', err.message);
-			throw new BadRequestException(Message.USED_MEMBER_NICK_OR_PHONE);
+			throw new BadRequestException(Message.USED_MEMBER_NICK_OR_EMAIL);
 		}
 	}
 

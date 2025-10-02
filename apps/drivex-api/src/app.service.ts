@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
 	getHello(): string {
-		return 'Hello to DRIVEX API Server!';
+		return 'Hello to Drivex API Server!';
 	}
 }
